@@ -4,6 +4,7 @@ import 'package:covid19doc/screens/forum/view_all_forums.dart';
 import 'package:covid19doc/utils/covid_widgets/covid_warn.dart';
 import 'package:covid19doc/utils/covid_widgets/forum.dart';
 import 'package:covid19doc/utils/widgets/navigation.dart';
+import 'package:covid19doc/utils/widgets/user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,51 @@ class _PatientDashboardState extends State<PatientDashboard> {
 
             ///----------- forums
             _getForums(widget.dataProvider, forumsProvider),
+
+            SizedBox(height: 16.0),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 8,
+                  child: Text(
+                    'Doctors nearby',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+//                    Navigator.of(context)
+//                        .push(AppNavigation.route(ViewAllForums()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text('View all'),
+                  ),
+                ),
+                SizedBox(width: 8.0)
+              ],
+            ),
+
+            /// --- show nearby doctors
+            widget.dataProvider.nearbyDoctors.length > 0
+                ? UserWidget(
+              user: widget.dataProvider.nearbyDoctors[0],
+            )
+                : SizedBox(
+              child: Center(
+                child: Text('No nearby doctors here'),
+              ),
+            ),
+
+            widget.dataProvider.nearbyDoctors.length > 1
+                ? UserWidget(
+              user: widget.dataProvider.nearbyDoctors[1],
+            )
+                : SizedBox(),
           ],
         ),
       ),
@@ -84,6 +130,8 @@ class _PatientDashboardState extends State<PatientDashboard> {
             SizedBox(
               height: 8.0,
             ),
+
+            /// --- show forums
             forumsProvider.forums.length > 0
                 ? ForumWidget(
                     forum: forumsProvider.forums[0],
@@ -98,6 +146,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
                     forum: forumsProvider.forums[1],
                   )
                 : SizedBox(),
+
           ],
         ),
       ),

@@ -23,9 +23,23 @@ class DashboardAPI {
 
         /// parsing user data as well as categories
         User user = User.fromJSON(decodedData['user']);
-        var result_data = Map();
+        var resultData = Map();
 
-        result_data['user'] = user;
+        resultData['user'] = user;
+
+        List<User> nearby = [];
+
+        if (user.is_doctor) {
+          for (var c in decodedData['patients']) {
+            nearby.add(User.fromJSON(c));
+          }
+          resultData['patients'] = nearby;
+        } else {
+          for (var c in decodedData['doctors']) {
+            nearby.add(User.fromJSON(c));
+          }
+          resultData['doctors'] = nearby;
+        }
 
         /// -- pulling forums
         List<Forum> forums = [];
@@ -35,8 +49,8 @@ class DashboardAPI {
           forums.add(Forum.fromJSON(c));
         }
 
-        result_data['forums'] = forums;
-        result.data = result_data;
+        resultData['forums'] = forums;
+        result.data = resultData;
       }
       return result;
     } catch (err) {

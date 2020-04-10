@@ -1,7 +1,12 @@
+import 'package:covid19doc/api/auth.dart';
+import 'package:covid19doc/screens/login_signup/login.dart';
 import 'package:covid19doc/screens/login_signup/signup.dart';
+import 'package:covid19doc/utils/widgets/app_bar.dart';
 import 'package:covid19doc/utils/widgets/navigation.dart';
+import 'package:covid19doc/utils/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class WhoAreYou extends StatefulWidget {
   @override
@@ -10,18 +15,51 @@ class WhoAreYou extends StatefulWidget {
 
 class _WhoAreYouState extends State<WhoAreYou> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppbar(
+        handleGoBack: () {
+          Navigator.of(context).pop();
+        },
+        title: 'Get Started',
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
+              'Create an account',
+              style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(height: 8.0),
+            Text(
               'I am a',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 16.0),
             _getButtons(),
+            SizedBox(height: 8.0),
+            Text(
+              'or',
+              style: TextStyle(fontSize: 18.0),
+            ),
+            SizedBox(height: 8.0),
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushReplacement(AppNavigation.route(Login()));
+              },
+              child: Text(
+                'Login',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
+              ),
+            ),
+            SizedBox(height: 16.0),
           ],
         ),
       ),
@@ -53,37 +91,4 @@ class _WhoAreYouState extends State<WhoAreYou> {
   }
 }
 
-class PictureButton extends StatelessWidget {
-  final String image;
-  final VoidCallback onPressed;
-  final String text;
 
-  const PictureButton({Key key, this.image, this.onPressed, this.text})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          CircleAvatar(
-            backgroundColor: Colors.greenAccent,
-            radius: MediaQuery.of(context).size.width * 0.2,
-            child: CircleAvatar(
-              radius: MediaQuery.of(context).size.width * 0.2 - 4.0,
-              backgroundImage: AssetImage(image),
-            ),
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            text,
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
-  }
-}

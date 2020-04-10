@@ -58,7 +58,9 @@ class User {
       last_name: map['last_name'],
       email: map['email'],
       id: map['user_id'],
-      created_on: DateTime.parse(map['created_on']),
+      created_on: map['created_on'] != null
+          ? DateTime.parse(map['created_on'])
+          : DateTime.now(),
       photo_url: map['photo_url'],
       is_doctor: map['is_doctor'],
       availability: map['availability'],
@@ -68,14 +70,15 @@ class User {
       profession: map['profession'],
       website: map['website'],
       additional_data: map['additional_data'],
-      age: int.parse(map['age'].toString()),
+      age: int.parse(map['age'] != null ? map['age'].toString() : '0'),
       hospital_name: map['hospital_name'],
       symptoms: map['symptoms'],
       workplace: map['workplace'],
       available_for_call: map['available_for_call'],
       speciality: map['speciality'],
       available_for_chat: map['available_for_chat'],
-      popularity: double.parse(map['popularity'].toString()),
+      popularity: double.parse(
+          map['popularity'] != null ? map['popularity'].toString() : '0.0'),
       reviews: UserReview.fromJSONList(map['reviews']),
     );
   }

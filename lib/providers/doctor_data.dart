@@ -1,3 +1,4 @@
+import 'package:covid19doc/data_models/user.dart';
 import 'package:flutter/foundation.dart';
 
 class DoctorDataProvider with ChangeNotifier {
@@ -20,4 +21,15 @@ class DoctorDataProvider with ChangeNotifier {
     _showLoader = value;
     notifyListeners();
   }
+
+  /// ---------------- nearby patients
+  List<User> _nearbyPatients = [];
+
+  List<User> get nearbyPatients => _nearbyPatients;
+
+  set nearbyPatients(List<User> value) {
+    _nearbyPatients = value;
+    notifyListeners();
+  }
+
 }

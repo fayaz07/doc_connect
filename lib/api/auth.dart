@@ -53,6 +53,7 @@ class AuthAPI {
             authToken: response.headers[SharedPrefConstants.authToken],
             refreshToken: response.headers[SharedPrefConstants.refreshToken],
             isDoctor: json.decode(response.body)['is_doctor'] ?? false);
+
         if (json.decode(response.body)['user'] == null) {
           m['user'] = null;
         } else {
@@ -68,6 +69,20 @@ class AuthAPI {
         }
 
         m['forums'] = forums;
+
+        List<User> nearby = [];
+
+        if (json.decode(response.body)['is_doctor']) {
+          for (var c in json.decode(response.body)['patients']) {
+            nearby.add(User.fromJSON(c));
+          }
+          m['patients'] = nearby;
+        } else {
+          for (var c in json.decode(response.body)['doctors']) {
+            nearby.add(User.fromJSON(c));
+          }
+          m['doctors'] = nearby;
+        }
 
         result.data = m;
       }
@@ -184,6 +199,128 @@ class AuthAPI {
       return ResponseHandler.getResult(response);
     } on Exception catch (e) {
       Log.handleHttpCrash("Unable to send password reset code ", e);
+      throw e;
+    }
+  }
+
+  static Future<Result> fbAuthentication(
+      String accessToken, bool doctor) async {
+    try {
+      Response response = await post(
+        Urls.fbAuth,
+        body: jsonEncode(
+            {"access_token": accessToken, "doctor": doctor ?? false}),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      Result result = ResponseHandler.getResult(response);
+      if (result.success) {
+        final decoded = json.decode(response.body);
+        print(decoded);
+        var map = Map();
+        map['user'] = User.fromJSON(decoded['user']);
+        map['auth'] = Auth(
+          email: (map['user'] as User).email,
+          loggedIn: true,
+          authToken: response.headers[SharedPrefConstants.authToken],
+          refreshToken: response.headers[SharedPrefConstants.refreshToken],
+          isDoctor: json.decode(response.body)['is_doctor'] ?? false,
+        );
+
+        // bool field
+        map['signup'] = decoded['signup'];
+
+        /// -- pulling forums
+        List<Forum> forums = [];
+
+        var jsonForums = decoded['forums'];
+        for (var c in jsonForums) {
+          forums.add(Forum.fromJSON(c));
+        }
+
+        map['forums'] = forums;
+
+        // pulling doctors and patients
+        List<User> nearby = [];
+
+        for (var c in json.decode(response.body)['patients']) {
+          nearby.add(User.fromJSON(c));
+        }
+        map['patients'] = nearby;
+        nearby.clear();
+        for (var c in json.decode(response.body)['doctors']) {
+          nearby.add(User.fromJSON(c));
+        }
+        map['doctors'] = nearby;
+
+        result.data = map;
+      }
+      return result;
+    } on Exception catch (e) {
+      Log.handleHttpCrash("Unable to authenticate using facebook ", e);
+      throw e;
+    }
+  }
+
+  static Future<Result> googleAuthentication(
+      String accessToken, bool doctor) async {
+    try {
+      Response response = await post(
+        Urls.googleAuth,
+        body: jsonEncode(
+            {"access_token": accessToken, "doctor": doctor ?? false}),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      Result result = ResponseHandler.getResult(response);
+      if (result.success) {
+        final decoded = json.decode(response.body);
+        print(decoded);
+        var map = Map();
+        map['user'] = User.fromJSON(decoded['user']);
+        map['auth'] = Auth(
+          email: (map['user'] as User).email,
+          loggedIn: true,
+          authToken: response.headers[SharedPrefConstants.authToken],
+          refreshToken: response.headers[SharedPrefConstants.refreshToken],
+          isDoctor: json.decode(response.body)['is_doctor'] ?? false,
+        );
+
+        // bool field
+        map['signup'] = decoded['signup'];
+
+        /// -- pulling forums
+        List<Forum> forums = [];
+
+        var jsonForums = decoded['forums'];
+        for (var c in jsonForums) {
+          forums.add(Forum.fromJSON(c));
+        }
+
+        map['forums'] = forums;
+
+        // pulling doctors and patients
+        List<User> nearby = [];
+
+        for (var c in json.decode(response.body)['patients']) {
+          nearby.add(User.fromJSON(c));
+        }
+        map['patients'] = nearby;
+        nearby.clear();
+        for (var c in json.decode(response.body)['doctors']) {
+          nearby.add(User.fromJSON(c));
+        }
+        map['doctors'] = nearby;
+
+        result.data = map;
+      }
+      return result;
+    } on Exception catch (e) {
+      Log.handleHttpCrash("Unable to authenticate using facebook ", e);
       throw e;
     }
   }

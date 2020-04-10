@@ -3,7 +3,9 @@ import 'package:covid19doc/api/utils/logger.dart';
 import 'package:covid19doc/data_models/auth.dart';
 import 'package:covid19doc/data_models/result.dart';
 import 'package:covid19doc/providers/auth.dart';
+import 'package:covid19doc/providers/doctor_data.dart';
 import 'package:covid19doc/providers/forums.dart';
+import 'package:covid19doc/providers/patient_data.dart';
 import 'package:covid19doc/providers/session.dart';
 import 'package:covid19doc/providers/user.dart';
 import 'package:covid19doc/screens/doctor/doctor_home.dart';
@@ -49,12 +51,17 @@ class SplashScreen extends StatelessWidget {
         Provider.of<ForumsProvider>(context, listen: false).forums =
             result.data['forums'];
 
-        if (Provider.of<UserProvider>(context, listen: false).user.is_doctor)
+        if (Provider.of<UserProvider>(context, listen: false).user.is_doctor) {
+          Provider.of<DoctorDataProvider>(context, listen: false)
+              .nearbyPatients = result.data['patients'];
           Navigator.of(context)
               .pushReplacement(AppNavigation.route(DoctorHome()));
-        else
+        } else {
+          Provider.of<PatientDataProvider>(context, listen: false)
+              .nearbyDoctors = result.data['doctors'];
           Navigator.of(context)
               .pushReplacement(AppNavigation.route(PatientHome()));
+        }
         return;
       } else {
         /// some other issue

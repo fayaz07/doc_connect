@@ -3,6 +3,7 @@ class Auth {
   String authToken;
   String refreshToken;
   bool loggedIn;
+  bool social;
   bool isDoctor;
 
   Auth(
@@ -10,6 +11,7 @@ class Auth {
       this.authToken,
       this.refreshToken,
       this.loggedIn,
+      this.social,
       this.isDoctor});
 
   @override

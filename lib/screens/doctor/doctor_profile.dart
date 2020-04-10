@@ -3,7 +3,7 @@ import 'package:covid19doc/api/file_upload.dart';
 import 'package:covid19doc/api/utils/urls.dart';
 import 'package:covid19doc/data_models/result.dart';
 import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/screens/patients/patient_edit_profile.dart';
+import 'package:covid19doc/screens/doctor/edit_profile.dart';
 import 'package:covid19doc/utils/dialogs/dialogs.dart';
 import 'package:covid19doc/utils/widgets/app_bar.dart';
 import 'package:covid19doc/utils/widgets/navigation.dart';
@@ -14,12 +14,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class PatientProfile extends StatefulWidget {
+class DoctorProfile extends StatefulWidget {
   @override
-  _PatientProfileState createState() => _PatientProfileState();
+  _DoctorProfileState createState() => _DoctorProfileState();
 }
 
-class _PatientProfileState extends State<PatientProfile> {
+class _DoctorProfileState extends State<DoctorProfile> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
@@ -32,7 +32,7 @@ class _PatientProfileState extends State<PatientProfile> {
             onPressed: () {
               Navigator.of(context).push(
                 AppNavigation.route(
-                  EditPatientProfile(),
+                  EditDoctorProfile(),
                 ),
               );
             },
@@ -119,15 +119,27 @@ class _PatientProfileState extends State<PatientProfile> {
 
           ///-------- end container
           SizedBox(height: 16.0),
+
           ProfileDetailTile(
-            title: 'Symptoms',
-            data: userProvider.user.symptoms ?? '-',
+            title: 'Speciality',
+            data: userProvider.user.speciality ?? '-',
+          ),
+          ProfileDetailTile(
+            title: 'Hospital',
+            data: userProvider.user.hospital_name ?? '-',
+          ),
+          ProfileDetailTile(
+            title: 'Availability',
+            data: userProvider.user.availability ?? '-',
+          ),
+          ProfileDetailTile(
+            title: 'Website',
+            data: userProvider.user.website ?? '-',
           ),
           ProfileDetailTile(
             title: 'Profession',
             data: userProvider.user.profession ?? '-',
           ),
-
           ProfileDetailTile(
             title: 'Gender',
             data: userProvider.user.gender ?? '-',

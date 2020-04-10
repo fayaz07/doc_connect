@@ -47,6 +47,7 @@ class _FillProfileState extends State<FillProfile>
     user.is_doctor = auth.isDoctor;
 
     final deviceSize = MediaQuery.of(context).size;
+    final userProvider = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: _getAppBar(),
       body: BaseView(
@@ -54,7 +55,7 @@ class _FillProfileState extends State<FillProfile>
         showLoader: _showModal,
         child: SafeArea(
           child: SingleChildScrollView(
-            child: _getPersonalDetailsFromUser(deviceSize),
+            child: _getPersonalDetailsFromUser(deviceSize, userProvider),
           ),
         ),
       ),
@@ -63,7 +64,8 @@ class _FillProfileState extends State<FillProfile>
 
   var _formKey = GlobalKey<FormState>();
 
-  Widget _getPersonalDetailsFromUser(Size deviceSize) => Padding(
+  Widget _getPersonalDetailsFromUser(Size deviceSize, User userProvider) =>
+      Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
           key: _formKey,
@@ -78,6 +80,7 @@ class _FillProfileState extends State<FillProfile>
               /// first name
               WrappedTextFieldWithCard(
                 label: 'First name',
+                initialValue: userProvider.first_name,
                 validateLength: 2,
                 save: (value) => user.first_name = value,
               ),
@@ -85,6 +88,7 @@ class _FillProfileState extends State<FillProfile>
 
               WrappedTextFieldWithCard(
                 label: 'Last name',
+                initialValue: userProvider.last_name,
                 validateLength: 2,
                 save: (value) => user.last_name = value,
               ),
@@ -189,7 +193,8 @@ class _FillProfileState extends State<FillProfile>
         Navigator.of(context)
             .pushReplacement(AppNavigation.route(DoctorHome()));
       else
-        Navigator.of(context).pushReplacement(AppNavigation.route(PatientHome()));
+        Navigator.of(context)
+            .pushReplacement(AppNavigation.route(PatientHome()));
     } else {
       if (result.message.contains("already")) {
         showDialog(

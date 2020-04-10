@@ -25,6 +25,8 @@ class Configs {
       ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true);
 
   static String trimText(String text, int limit) {
+    if(text==null)
+      return " ";
     text = text.replaceAll("\n", " ");
     return text.length < limit ? text : text.substring(0, limit) + "..";
   }

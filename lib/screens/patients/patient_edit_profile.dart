@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class PatientEditProfile extends StatefulWidget {
+class EditPatientProfile extends StatefulWidget {
   @override
-  _PatientEditProfileState createState() => _PatientEditProfileState();
+  _EditPatientProfileState createState() => _EditPatientProfileState();
 }
 
-class _PatientEditProfileState extends State<PatientEditProfile> {
+class _EditPatientProfileState extends State<EditPatientProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

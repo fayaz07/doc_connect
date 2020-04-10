@@ -7,7 +7,6 @@ import 'utils/logger.dart';
 import 'utils/respone_handler.dart';
 
 class UserAPI {
-  /// for logging in a user with email and password
   static Future<Result> saveUserDataForFirstTime(User user) async {
     try {
       Response response = await post(
@@ -26,21 +25,42 @@ class UserAPI {
     }
   }
 
-  static Future<Result> updatePreferences({List preferences}) async {
+  static Future<Result> getNearbyDoctors() async {
     try {
-      print(preferences);
-      Response response = await patch(
-        Urls.updateUserPreferences,
-        body: jsonEncode({"preferences": preferences}),
+      Response response = await get(
+        Urls.getNearbyDoctors,
         headers: Urls.getHeadersWithToken(),
       );
       Result result = ResponseHandler.getResult(response);
       if (result.success) {
-        result.data = User.fromJSON(json.decode(response.body)['user']);
+        List<User> doctors = [];
+        for (var c in json.decode(response.body)['doctors']) {}
       }
       return result;
     } on Exception catch (e) {
-      Log.handleHttpCrash("Unable to updatePreferences", e);
+      Log.handleHttpCrash("Unable to saveUserDataForFirstTime", e);
+      throw e;
+    }
+  }
+
+  static Future<Result> searchDoctors(String query) async {
+    try {
+      Response response = await post(
+        Urls.searchDoctors,
+        body: jsonEncode({"query": query}),
+        headers: Urls.getHeadersWithToken(),
+      );
+      Result result = ResponseHandler.getResult(response);
+      if (result.success) {
+        List<User> doctors = [];
+        for (var c in json.decode(response.body)['doctors']) {
+          doctors.add(User.fromJSON(c));
+        }
+        result.data = doctors;
+      }
+      return result;
+    } on Exception catch (e) {
+      Log.handleHttpCrash("Unable to saveUserDataForFirstTime", e);
       throw e;
     }
   }

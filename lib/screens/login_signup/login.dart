@@ -1,8 +1,11 @@
 import 'package:covid19doc/api/auth.dart';
 import 'package:covid19doc/data_models/auth.dart';
 import 'package:covid19doc/data_models/result.dart';
+import 'package:covid19doc/data_models/user.dart';
 import 'package:covid19doc/providers/auth.dart';
+import 'package:covid19doc/providers/doctor_data.dart';
 import 'package:covid19doc/providers/forums.dart';
+import 'package:covid19doc/providers/patient_data.dart';
 import 'package:covid19doc/providers/session.dart';
 import 'package:covid19doc/providers/user.dart';
 import 'package:covid19doc/screens/doctor/doctor_home.dart';
@@ -14,8 +17,11 @@ import 'package:covid19doc/utils/widgets/login_signup_widgets.dart';
 import 'package:covid19doc/utils/widgets/navigation.dart';
 import 'package:covid19doc/utils/widgets/platform_widgets.dart';
 import 'package:covid19doc/utils/widgets/text_field_register.dart';
+import 'package:covid19doc/utils/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/labels.dart';
@@ -23,6 +29,10 @@ import '../base_view.dart';
 import 'complete_profile.dart';
 
 class Login extends StatefulWidget {
+  final bool isDoctor;
+
+  const Login({Key key, this.isDoctor = false}) : super(key: key);
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -53,6 +63,136 @@ class _LoginState extends State<Login> {
       _validPassword = false;
     }
     setState(() {});
+  }
+
+  loginWithFB() async {
+    final facebookLogin = FacebookLogin();
+    final facebookLoginResult = await facebookLogin.logIn(['email']);
+    final token = facebookLoginResult.accessToken.token;
+    final res = await AuthAPI.fbAuthentication(token, widget.isDoctor);
+
+//   print(res);
+    if (res.success) {
+//      if (res.data['signup']) {
+//        // navigate to complete profile screen
+//
+//      }
+
+      Auth authData = res.data['auth'];
+      print(authData);
+
+      Provider.of<AuthProvider>(context, listen: false).auth = authData;
+      Session.storeLoginDetails(authData);
+
+      Provider.of<ForumsProvider>(context, listen: false).forums =
+          res.data['forums'];
+
+//      if (authData.isDoctor) {
+      Provider.of<DoctorDataProvider>(context, listen: false).nearbyPatients =
+          res.data['patients'];
+      //    } else {
+      Provider.of<PatientDataProvider>(context, listen: false).nearbyDoctors =
+          res.data['doctors'];
+      //  }
+
+      if ((res.data['user'] as User).gender == null) {
+        Provider.of<UserProvider>(context, listen: false).user =
+            res.data['user'];
+        Navigator.of(context)
+            .pushReplacement(AppNavigation.route(FillProfile()));
+        return;
+      } else {
+        Provider.of<UserProvider>(context, listen: false).user =
+            res.data['user'];
+        final auth = Provider.of<AuthProvider>(context, listen: false).auth;
+        if (auth.isDoctor)
+          Navigator.of(context)
+              .pushReplacement(AppNavigation.route(DoctorHome()));
+        else
+          Navigator.of(context)
+              .pushReplacement(AppNavigation.route(PatientHome()));
+        return;
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) =>
+            ErrorDialog(title: 'Login failed', content: res.message),
+      );
+    }
+  }
+
+  loginWithGoogle() async {
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+      ],
+    );
+    setState(() {
+      _showModal = true;
+    });
+    _googleSignIn.signIn().then((acc) {
+      acc.authentication.then((a) async {
+//        print(a.accessToken);
+
+        final res =
+            await AuthAPI.googleAuthentication(a.accessToken, widget.isDoctor);
+
+//   print(res);
+        if (res.success) {
+//      if (res.data['signup']) {
+//        // navigate to complete profile screen
+//
+//      }
+
+          Auth authData = res.data['auth'];
+          print(authData);
+
+          Provider.of<AuthProvider>(context, listen: false).auth = authData;
+          Session.storeLoginDetails(authData);
+
+          Provider.of<ForumsProvider>(context, listen: false).forums =
+              res.data['forums'];
+
+//      if (authData.isDoctor) {
+          Provider.of<DoctorDataProvider>(context, listen: false)
+              .nearbyPatients = res.data['patients'];
+          //    } else {
+          Provider.of<PatientDataProvider>(context, listen: false)
+              .nearbyDoctors = res.data['doctors'];
+          //  }
+
+          if ((res.data['user'] as User).gender == null) {
+            Provider.of<UserProvider>(context, listen: false).user =
+                res.data['user'];
+            Navigator.of(context)
+                .pushReplacement(AppNavigation.route(FillProfile()));
+            return;
+          } else {
+            Provider.of<UserProvider>(context, listen: false).user =
+                res.data['user'];
+            final auth = Provider.of<AuthProvider>(context, listen: false).auth;
+            if (auth.isDoctor)
+              Navigator.of(context)
+                  .pushReplacement(AppNavigation.route(DoctorHome()));
+            else
+              Navigator.of(context)
+                  .pushReplacement(AppNavigation.route(PatientHome()));
+            return;
+          }
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                ErrorDialog(title: 'Login failed', content: res.message),
+          );
+        }
+      });
+    });
+
+    setState(() {
+      _showModal = false;
+    });
   }
 
   @override
@@ -131,6 +271,14 @@ class _LoginState extends State<Login> {
       Provider.of<ForumsProvider>(context, listen: false).forums =
           result.data['forums'];
 
+      if (authData.isDoctor) {
+        Provider.of<DoctorDataProvider>(context, listen: false).nearbyPatients =
+            result.data['patients'];
+      } else {
+        Provider.of<PatientDataProvider>(context, listen: false).nearbyDoctors =
+            result.data['doctors'];
+      }
+
       if (result.data['user'] == null) {
         Navigator.of(context)
             .pushReplacement(AppNavigation.route(FillProfile()));
@@ -143,7 +291,8 @@ class _LoginState extends State<Login> {
           Navigator.of(context)
               .pushReplacement(AppNavigation.route(DoctorHome()));
         else
-          Navigator.of(context).pushReplacement(AppNavigation.route(PatientHome()));
+          Navigator.of(context)
+              .pushReplacement(AppNavigation.route(PatientHome()));
         return;
       }
     } else {
@@ -177,6 +326,26 @@ class _LoginState extends State<Login> {
   _handleGoBack() {
     status = " ";
     Navigator.of(context).pop();
+  }
+
+  Widget _getSocialButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Spacer(flex: 1),
+        SizedBox(width: 16.0),
+        SocialButton(
+          onPressed: loginWithGoogle,
+          asset: 'assets/google.png',
+        ),
+        SizedBox(width: 16.0),
+        SocialButton(
+          onPressed: loginWithFB,
+          asset: 'assets/facebook.png',
+        ),
+        Spacer(flex: 1),
+      ],
+    );
   }
 
   Widget _getLoginForm() {
@@ -257,7 +426,17 @@ class _LoginState extends State<Login> {
               )
             ],
           ),
-        )
+        ),
+
+        SizedBox(height: 16.0),
+
+        Text(
+          'or',
+          style: TextStyle(fontSize: 18.0),
+        ),
+
+        SizedBox(height: 16.0),
+        _getSocialButtons(),
       ],
     );
   }

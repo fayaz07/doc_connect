@@ -1,9 +1,14 @@
 import 'package:covid19doc/providers/doctor_data.dart';
+import 'package:covid19doc/screens/chat/chats.dart';
 import 'package:covid19doc/screens/doctor/doctor_dashboard.dart';
+import 'package:covid19doc/screens/doctor/doctor_profile.dart';
 import 'package:covid19doc/utils/widgets/app_bar.dart';
+import 'package:covid19doc/utils/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+
+import '../search_doctor.dart';
 
 class DoctorHome extends StatefulWidget {
   @override
@@ -23,7 +28,9 @@ class _DoctorHomeState extends State<DoctorHome> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(AppNavigation.route(SearchDoctor()));
+            },
           )
         ],
       ),
@@ -35,16 +42,20 @@ class _DoctorHomeState extends State<DoctorHome> {
   Widget _getBody(DoctorDataProvider dataProvider) {
     switch (dataProvider.currentScreen) {
       case 0:
-        return DoctorDashboard();
+        return DoctorDashboard(
+          dataProvider: dataProvider,
+        );
         break;
       case 1:
-        return DoctorDashboard();
+        return Chats();
         break;
       case 2:
-        return DoctorDashboard();
+        return DoctorProfile();
         break;
       default:
-        return DoctorDashboard();
+        return DoctorDashboard(
+          dataProvider: dataProvider,
+        );
         break;
     }
   }

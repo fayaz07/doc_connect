@@ -1,4 +1,5 @@
 import 'package:covid19doc/providers/auth.dart';
+import 'package:covid19doc/providers/chat.dart';
 import 'package:covid19doc/providers/current_forum_data.dart';
 import 'package:covid19doc/providers/doctor_data.dart';
 import 'package:covid19doc/providers/forums.dart';
@@ -34,6 +35,9 @@ class Covid19Doc extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => CurrentForumData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ChatProvider(),
         )
       ],
       child: MaterialApp(

@@ -50,3 +50,59 @@ class ProfileDetailTile extends StatelessWidget {
     );
   }
 }
+
+class SocialButton extends StatelessWidget {
+  final String asset;
+  final VoidCallback onPressed;
+
+  const SocialButton({Key key, this.asset, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      onTap: onPressed,
+      child: CircleAvatar(
+        radius: 26,
+//        foregroundColor: Colors.white,
+//        backgroundColor: Colors.white,
+        backgroundImage: AssetImage(asset),
+      ),
+    );
+  }
+}
+
+class PictureButton extends StatelessWidget {
+  final String image;
+  final VoidCallback onPressed;
+  final String text;
+
+  const PictureButton({Key key, this.image, this.onPressed, this.text})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          CircleAvatar(
+            backgroundColor: Colors.greenAccent,
+            radius: MediaQuery.of(context).size.width * 0.2,
+            child: CircleAvatar(
+              radius: MediaQuery.of(context).size.width * 0.2 - 4.0,
+              backgroundImage: AssetImage(image),
+            ),
+          ),
+          SizedBox(height: 8.0),
+          Text(
+            text,
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
+}

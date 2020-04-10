@@ -10,6 +10,10 @@ import 'package:flutter/cupertino.dart';
 import 'navigation.dart';
 
 class LinkToLoginScreen extends StatelessWidget {
+  final bool isDoctor;
+
+  const LinkToLoginScreen({Key key, this.isDoctor = false}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -23,8 +27,11 @@ class LinkToLoginScreen extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacement(AppNavigation.route(Login()));
+              Navigator.of(context).pushReplacement(
+                AppNavigation.route(
+                  Login(isDoctor: isDoctor),
+                ),
+              );
             },
             child: Text(
               ' ${Labels.logIn}',
