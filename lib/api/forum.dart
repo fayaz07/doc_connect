@@ -9,11 +9,11 @@ import 'utils/respone_handler.dart';
 import 'utils/urls.dart';
 
 class ForumAPI {
-  static Future<Result> createForum(Forum forum) async {
+  static Future<Result> createForum(ForumQuestion forum) async {
     try {
       Response response = await post(
         Urls.createForum,
-        body: jsonEncode(Forum.toJSON(forum)),
+        body: jsonEncode(ForumQuestion.toJSON(forum)),
         headers: Urls.getHeadersWithToken(),
       );
 
@@ -22,7 +22,7 @@ class ForumAPI {
       if (result.success) {
         /// pull forum
         var forum = json.decode(response.body)['forum'];
-        Forum newForum = Forum.fromJSON(forum);
+        ForumQuestion newForum = ForumQuestion.fromJSON(forum);
         result.data = newForum;
       }
       return result;

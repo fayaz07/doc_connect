@@ -1,6 +1,5 @@
 import 'package:covid19doc/data_models/forum.dart';
 import 'package:covid19doc/providers/current_forum_data.dart';
-import 'package:covid19doc/providers/forums.dart';
 import 'package:covid19doc/screens/forum/forum_page.dart';
 import 'package:covid19doc/utils/widgets/navigation.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ForumWidget extends StatelessWidget {
-  final Forum forum;
+  final ForumQuestion forum;
 
   const ForumWidget({Key key, this.forum}) : super(key: key);
 
@@ -25,12 +24,10 @@ class ForumWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(4.0),
         onTap: () {
           // enter forum
-          Provider.of<CurrentForumData>(context, listen: false).forum = forum;
+          Provider.of<CurrentForumData>(context, listen: false).reset(forum: forum);
           Navigator.of(context).push(
             AppNavigation.route(
-              ForumPage(
-                forumKey: forum.key
-              ),
+              ForumPage(forumQuestion: forum),
             ),
           );
         },
@@ -42,7 +39,7 @@ class ForumWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    forum.title,
+                    forum.title ?? " ",
                     style: TextStyle(
                         fontSize: 18.0,
                         color: Colors.black,
@@ -50,7 +47,7 @@ class ForumWidget extends StatelessWidget {
                   ),
                   SizedBox(height: 4.0),
                   Text(
-                    forum.description,
+                    forum.question ?? " ",
                     style: TextStyle(
                       fontSize: 14.0,
                       color: Colors.black,

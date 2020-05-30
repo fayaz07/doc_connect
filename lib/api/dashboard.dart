@@ -42,11 +42,11 @@ class DashboardAPI {
         }
 
         /// -- pulling forums
-        List<Forum> forums = [];
+        List<ForumQuestion> forums = [];
 
         var jsonForums = decodedData['forums'];
         for (var c in jsonForums) {
-          forums.add(Forum.fromJSON(c));
+          forums.add(ForumQuestion.fromJSON(c));
         }
 
         resultData['forums'] = forums;

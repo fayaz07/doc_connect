@@ -117,7 +117,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context)
-                        .push(AppNavigation.route(ViewAllForums()));
+                        .push(AppNavigation.route(ViewAllQuestions()));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),

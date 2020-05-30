@@ -185,6 +185,7 @@ class _GuestProfileState extends State<GuestProfile> {
           context: context,
           builder: (context) => SuccessDialog(
             title: 'Success',
+
             content:
                 'You request to chat with the doctor has been successfully posted, please wait for the doctor to accept your request, meanwhile checkout chats section for your request approval',
           ),

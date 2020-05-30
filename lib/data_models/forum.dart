@@ -1,100 +1,115 @@
-class Forum {
-  String key;
+class ForumQuestion {
+  String id, authorId, topic, title, question;
+  List views;
+  DateTime askedOn;
+  bool solved;
+  List upVotes, downVotes;
+  List<ForumMessage> messages;
 
-  // ignore: non_constant_identifier_names
-  DateTime created_on;
-  String author;
-  String title;
-  String description;
-
-  List<Message> messages;
-
-  // ignore: non_constant_identifier_names
-  Forum(
-      {this.key,
-      // ignore: non_constant_identifier_names
-      this.created_on,
-      this.author,
+  ForumQuestion(
+      {this.id,
+      this.authorId,
+      this.topic,
       this.title,
-      this.description,
-      this.messages});
+      this.question,
+      this.views,
+      this.askedOn,
+      this.solved,
+      this.messages,
+      this.upVotes,
+      this.downVotes});
 
-  factory Forum.fromJSON(var map) {
-    return Forum(
-      author: map['author'],
-      key: map['key'],
+  factory ForumQuestion.fromJSON(var map) {
+    return ForumQuestion(
+      id: map['_id'],
+      authorId: map['authorId'],
+      topic: map['topic'],
       title: map['title'],
-      description: map['description'],
-      created_on: DateTime.parse(map['created_on']),
-      messages:
-          map['messages'] != null ? Message.fromJSONList(map['messages']) : [],
+      question: map['question'],
+      views: map['views'] ?? [],
+      askedOn: DateTime.parse(map['askedOn']),
+      solved: map['solved'],
+      messages: map['messages'] ?? [],
+      upVotes: map['upVotes'] ?? [],
+      downVotes: map['downVotes'] ?? [],
     );
   }
 
-  static Map<String, dynamic> toJSON(Forum forum) {
+  static Map toJSON(ForumQuestion forum) {
     return {
-      "author": forum.author,
+      "_id": forum.id,
+      "authorId": forum.authorId,
+      "topic": forum.topic,
       "title": forum.title,
-      "description": forum.description,
+      "question": forum.question,
+      "views": forum.views,
+      "askedOn": forum.askedOn,
+      "solved": forum.solved,
+      "messages": forum.messages,
+      "upVotes": forum.upVotes,
+      "downVotes": forum.downVotes,
     };
   }
 
   @override
   String toString() {
-    return 'Forum{key: $key, created_on: $created_on, author: $author, title: $title, description: $description}';
+    return 'Forum{ authorId: $authorId, topic: $topic, title: $title, question: $question, views: $views, askedOn: $askedOn, solved: $solved, messages: $messages}';
   }
 }
 
-class Message {
-  // ignore: non_constant_identifier_names
-  String id, room_id;
+class ForumMessage {
+  String forumId, authorId, author, profession, speciality, photoUrl, location;
+  String answer, tips;
+  bool doctor;
+  DateTime answeredOn;
+  List upVotes, downVotes;
 
-  // ignore: non_constant_identifier_names
-  String author, author_id, message;
-  DateTime time;
+  ForumMessage(
+      {this.forumId,
+      this.authorId,
+      this.author,
+      this.profession,
+      this.speciality,
+      this.answer,
+      this.tips,
+      this.doctor,
+      this.upVotes,
+      this.downVotes,
+      this.photoUrl,
+      this.location,
+      this.answeredOn});
 
-  Message(
-      {this.author,
-      // ignore: non_constant_identifier_names
-      this.author_id,
-      this.message,
-      this.time,
-      this.id,
-      // ignore: non_constant_identifier_names
-      this.room_id});
-
-  factory Message.fromJSON(var map) {
-    return Message(
-      id: map['_id'],
-      room_id: map['room_id'],
-      author_id: map['author_id'],
+  factory ForumMessage.fromJSON(var map) {
+    return ForumMessage(
+      forumId: map['forumId'],
+      authorId: map['authorId'],
       author: map['author'],
-      message: map['message'],
-      time: DateTime.parse(map['time']),
+      profession: map['profession'],
+      speciality: map['speciality'],
+      answer: map['answer'],
+      tips: map['tips'],
+      doctor: map['doctor'] ?? false,
+      upVotes: map['upVotes'] ?? [],
+      downVotes: map['downVotes'] ?? [],
+      answeredOn: DateTime.parse(map['answeredOn']),
+      photoUrl: map['photoUrl'],
+      location: map['location'],
     );
   }
 
-  static Map<String, dynamic> toJSON(Message message) {
+  static toJSON(ForumMessage message) {
     return {
-      "room_id": message.room_id,
-      "author_id": message.author_id,
+      "forumId": message.forumId,
+      "authorId": message.authorId,
       "author": message.author,
-      "message": message.message,
+      "profession": message.profession,
+      "speciality": message.speciality,
+      "answer": message.answer,
+      "tips": message.tips,
+      "doctor": message.doctor,
+      "photoUrl": message.photoUrl,
+      "location": message.location,
     };
   }
 
-  static List<Message> fromJSONList(var list) {
-    List<Message> messages = [];
-
-    for (var c in list) {
-      messages.add(Message.fromJSON(c));
-    }
-
-    return messages;
-  }
-
-  @override
-  String toString() {
-    return 'Message{room_id: $room_id, author: $author, message: $message}';
-  }
 }

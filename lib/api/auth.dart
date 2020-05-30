@@ -61,11 +61,11 @@ class AuthAPI {
         }
 
         /// -- pulling forums
-        List<Forum> forums = [];
+        List<ForumQuestion> forums = [];
 
         var jsonForums = json.decode(response.body)['forums'];
         for (var c in jsonForums) {
-          forums.add(Forum.fromJSON(c));
+          forums.add(ForumQuestion.fromJSON(c));
         }
 
         m['forums'] = forums;
@@ -233,11 +233,11 @@ class AuthAPI {
         map['signup'] = decoded['signup'];
 
         /// -- pulling forums
-        List<Forum> forums = [];
+        List<ForumQuestion> forums = [];
 
         var jsonForums = decoded['forums'];
         for (var c in jsonForums) {
-          forums.add(Forum.fromJSON(c));
+          forums.add(ForumQuestion.fromJSON(c));
         }
 
         map['forums'] = forums;
@@ -294,11 +294,11 @@ class AuthAPI {
         map['signup'] = decoded['signup'];
 
         /// -- pulling forums
-        List<Forum> forums = [];
+        List<ForumQuestion> forums = [];
 
         var jsonForums = decoded['forums'];
         for (var c in jsonForums) {
-          forums.add(Forum.fromJSON(c));
+          forums.add(ForumQuestion.fromJSON(c));
         }
 
         map['forums'] = forums;

@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import 'create_forum.dart';
+import 'ask_question_in_forum.dart';
 
-class ViewAllForums extends StatefulWidget {
+class ViewAllQuestions extends StatefulWidget {
   @override
-  _ViewAllForumsState createState() => _ViewAllForumsState();
+  _ViewAllQuestionsState createState() => _ViewAllQuestionsState();
 }
 
-class _ViewAllForumsState extends State<ViewAllForums> {
+class _ViewAllQuestionsState extends State<ViewAllQuestions> {
   @override
   Widget build(BuildContext context) {
     final forumsProvider = Provider.of<ForumsProvider>(context);
@@ -35,14 +35,12 @@ class _ViewAllForumsState extends State<ViewAllForums> {
           },
         ),
       ),
-      floatingActionButton: authProvider.auth.isDoctor
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(AppNavigation.route(CreateForum()));
-              },
-              child: Icon(Icons.add_comment),
-            )
-          : SizedBox(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(AppNavigation.route(AskQuestionInForum()));
+        },
+        child: Icon(Icons.add_comment),
+      ),
     );
   }
 }

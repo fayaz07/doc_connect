@@ -131,9 +131,13 @@ class _LoginState extends State<Login> {
     setState(() {
       _showModal = true;
     });
-    _googleSignIn.signIn().then((acc) {
-      acc.authentication.then((a) async {
+    _googleSignIn.signIn().then((GoogleSignInAccount acc) {
+
+      acc.authentication.then((GoogleSignInAuthentication a) async {
 //        print(a.accessToken);
+
+        a.idToken;
+        a.accessToken;
 
         final res =
             await AuthAPI.googleAuthentication(a.accessToken, widget.isDoctor);

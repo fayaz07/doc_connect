@@ -49,10 +49,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final provider = Provider.of<ChatProvider>(context, listen: false);
 
     ///------------ listen to old messages
-    _chatSocket.on('old_messages', (old_messages) {
-      if (old_messages.length > 0) {
+    _chatSocket.on('old_messages', (oldMessages) {
+      if (oldMessages.length > 0) {
         List<Message> list = [];
-        for (var c in old_messages) {
+        for (var c in oldMessages) {
           list.add(Message.fromJSON(c));
         }
         provider.currentChatMessages = list;
@@ -105,7 +105,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final userProvider = Provider.of<UserProvider>(context);
     authorId = userProvider.user.id;
     return Scaffold(
-      backgroundColor: Color(0xfffbf4d9),
+//      backgroundColor: Color(0xfffbf4d9),
       appBar: MyAppbar(
         handleGoBack: () {
           Navigator.of(context).pop();
@@ -113,12 +113,13 @@ class _ChatScreenState extends State<ChatScreen> {
         title: '${widget.inboxModel.name}',
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(8.0,8.0,8.0,64.0),
         child: ListView.builder(
           key: Key('show-Messages'),
           controller: scrollController,
           itemCount: chatProvider.currentChatMessages.length,
           itemBuilder: (context, i) => MessageBuilder(
+              id: userProvider.user.id,
               message: chatProvider.currentChatMessages[i],
               url: widget.inboxModel.photo_url),
         ),
@@ -132,7 +133,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget getSendMessageField(
       UserProvider userProvider, ChatProvider chatProvider) {
     return Material(
-      color: Color(0xfffbf4d9),
+//      color: Color(0xfffbf4d9),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -192,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
   buildNewMessage(UserProvider userProvider, ChatProvider chatProvider) {
     FocusScope.of(context).requestFocus(FocusNode());
     if (_textEditingController.text.length > 0) {
-      final message = Message(
+      var message = Message(
         room_id: widget.inboxModel.chat.id,
         message: _textEditingController.text.trim(),
         author:
@@ -200,7 +201,7 @@ class _ChatScreenState extends State<ChatScreen> {
         author_id: userProvider.user.id,
       );
       final messageJson = Message.toJSON(message);
-
+      message.time = DateTime.now();
       // adding message to tree
       chatProvider.addCurrentChatMessage(message);
 
@@ -224,52 +225,171 @@ class _ChatScreenState extends State<ChatScreen> {
 class MessageBuilder extends StatelessWidget {
   final Message message;
   final String url;
+  final String id;
 
-  const MessageBuilder({Key key, this.message, this.url}) : super(key: key);
+  const MessageBuilder({Key key, this.message, this.url, this.id})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin:
-          const EdgeInsets.only(top: 6.0, bottom: 6.0, left: 8.0, right: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CircleAvatar(
-            radius: 20.0,
-            backgroundImage: CachedNetworkImageProvider(
-              url == null || url.length < 5
-                  ? Constants.defaultProfilePic
-                  : Urls.host + url,
-            ),
-          ),
-          SizedBox(width: 16.0),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
+    return id.contains(message.author_id.trim())
+        ? OutgoingText(
+            image: url ?? Constants.defaultProfilePic,
+            message: message,
+          )
+        : IncomingText(
+            image: url ?? Constants.defaultProfilePic,
+            message: message,
+          );
+  }
+}
+
+final Color incomingTextBackgroundColor = Colors.purpleAccent;
+final Color outgoingTextBackgroundColor = Colors.indigoAccent;
+
+class IncomingText extends StatelessWidget {
+  final String image;
+  final Message message;
+
+  const IncomingText({Key key, this.image, this.message}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minWidth: 80.0,
+              maxWidth: MediaQuery.of(context).size.width * .75),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 49.0),
+                child: Text(
                   '${message.author}',
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 4.0),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        '${message.message}',
-                        style: TextStyle(
-                          fontSize: 16.0,
+              ),
+              SizedBox(height: 2.0),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(width: 8.0),
+                  CircleAvatar(
+                    radius: 16.0,
+                    backgroundImage: CachedNetworkImageProvider(image),
+                  ),
+                  SizedBox(width: 8.0),
+                  Flexible(
+                    flex: 2,
+                    child: Material(
+                      color: incomingTextBackgroundColor,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(16.0),
+                              bottomRight: Radius.circular(16.0),
+                              topRight: Radius.circular(16.0),
+                              topLeft: Radius.circular(4.0))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              '${message.message}',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 16.0),
+                            ),
+                            SizedBox(height: 2.0),
+                            Text(
+                              '${message.time.hour}:${message.time.minute}',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 12.0),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  )
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class OutgoingText extends StatelessWidget {
+  final String image;
+  final Message message;
+
+  const OutgoingText({Key key, this.image, this.message}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minWidth: 100.0,
+              maxWidth: MediaQuery.of(context).size.width * .75),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Flexible(
+                flex: 2,
+                child: Material(
+                  color: outgoingTextBackgroundColor,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(16.0),
+                          bottomRight: Radius.circular(16.0),
+                          topRight: Radius.circular(4.0),
+                          topLeft: Radius.circular(16.0))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          '${message.message}',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        ),
+                        SizedBox(height: 2.0),
+                        Text(
+                          '${message.time.hour}:${message.time.minute}',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Colors.white, fontSize: 12.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.0),
+              CircleAvatar(
+                radius: 16.0,
+                backgroundImage: CachedNetworkImageProvider(image),
+              ),
+              SizedBox(width: 8.0),
+            ],
+          ),
+        ),
       ),
     );
   }
