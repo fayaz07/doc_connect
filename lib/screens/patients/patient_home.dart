@@ -1,9 +1,9 @@
-import 'package:covid19doc/providers/patient_data.dart';
-import 'package:covid19doc/screens/chat/chats.dart';
-import 'package:covid19doc/screens/patients/patient_profile.dart';
-import 'package:covid19doc/screens/search_doctor.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
+import 'package:doc_connect/providers/patient_data.dart';
+import 'package:doc_connect/screens/chat/chats.dart';
+import 'package:doc_connect/screens/patients/patient_profile.dart';
+import 'package:doc_connect/screens/search_doctor.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';

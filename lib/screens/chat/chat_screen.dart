@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:covid19doc/api/utils/urls.dart';
-import 'package:covid19doc/data_models/chat.dart';
-import 'package:covid19doc/providers/chat.dart';
-import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/utils/constants.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
+import 'package:doc_connect/api/utils/urls.dart';
+import 'package:doc_connect/data_models/chat.dart';
+import 'package:doc_connect/providers/chat.dart';
+import 'package:doc_connect/providers/user.dart';
+import 'package:doc_connect/utils/constants.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -113,8 +113,9 @@ class _ChatScreenState extends State<ChatScreen> {
         title: '${widget.inboxModel.name}',
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(8.0,8.0,8.0,64.0),
+        padding: const EdgeInsets.fromLTRB(8.0,0.0,8.0,64.0),
         child: ListView.builder(
+          physics: BouncingScrollPhysics(),
           key: Key('show-Messages'),
           controller: scrollController,
           itemCount: chatProvider.currentChatMessages.length,

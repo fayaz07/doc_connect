@@ -1,5 +1,5 @@
-import 'package:covid19doc/screens/login_signup/login.dart';
-import 'package:covid19doc/screens/login_signup/signup.dart';
+import 'package:doc_connect/screens/login_signup/login.dart';
+import 'package:doc_connect/screens/login_signup/signup.dart';
 
 import '../../utils/colors.dart';
 import '../../utils/constants.dart';

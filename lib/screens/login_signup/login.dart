@@ -1,31 +1,31 @@
-import 'package:covid19doc/api/auth.dart';
-import 'package:covid19doc/data_models/auth.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/data_models/user.dart';
-import 'package:covid19doc/providers/auth.dart';
-import 'package:covid19doc/providers/doctor_data.dart';
-import 'package:covid19doc/providers/forums.dart';
-import 'package:covid19doc/providers/patient_data.dart';
-import 'package:covid19doc/providers/session.dart';
-import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/screens/doctor/doctor_home.dart';
-import 'package:covid19doc/screens/login_signup/password_reset.dart';
-import 'package:covid19doc/screens/patients/patient_home.dart';
-import 'package:covid19doc/utils/dialogs/dialogs.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/login_signup_widgets.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/platform_widgets.dart';
-import 'package:covid19doc/utils/widgets/text_field_register.dart';
-import 'package:covid19doc/utils/widgets/widgets.dart';
+import 'package:doc_connect/api/auth.dart';
+import 'package:doc_connect/data_models/auth.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/data_models/user.dart';
+import 'package:doc_connect/providers/auth.dart';
+import 'package:doc_connect/providers/doctor_data.dart';
+import 'package:doc_connect/providers/forums.dart';
+import 'package:doc_connect/providers/patient_data.dart';
+import 'package:doc_connect/providers/session.dart';
+import 'package:doc_connect/providers/user.dart';
+import 'package:doc_connect/screens/doctor/doctor_home.dart';
+import 'package:doc_connect/screens/login_signup/password_reset.dart';
+import 'package:doc_connect/screens/patients/patient_home.dart';
+import 'package:doc_connect/utils/dialogs/dialogs.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/login_signup_widgets.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/platform_widgets.dart';
+import 'package:doc_connect/utils/widgets/text_field_register.dart';
+import 'package:doc_connect/utils/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/labels.dart';
-import '../base_view.dart';
 import 'complete_profile.dart';
 
 class Login extends StatefulWidget {
@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  bool _validEmail = false, _validPassword = false, _showModal = false;
+  bool _validEmail = false, _validPassword = false;
 
   String _email, _password, status = " ";
 
@@ -71,13 +71,7 @@ class _LoginState extends State<Login> {
     final token = facebookLoginResult.accessToken.token;
     final res = await AuthAPI.fbAuthentication(token, widget.isDoctor);
 
-//   print(res);
     if (res.success) {
-//      if (res.data['signup']) {
-//        // navigate to complete profile screen
-//
-//      }
-
       Auth authData = res.data['auth'];
       print(authData);
 
@@ -87,13 +81,10 @@ class _LoginState extends State<Login> {
       Provider.of<ForumsProvider>(context, listen: false).forums =
           res.data['forums'];
 
-//      if (authData.isDoctor) {
       Provider.of<DoctorDataProvider>(context, listen: false).nearbyPatients =
           res.data['patients'];
-      //    } else {
       Provider.of<PatientDataProvider>(context, listen: false).nearbyDoctors =
           res.data['doctors'];
-      //  }
 
       if ((res.data['user'] as User).gender == null) {
         Provider.of<UserProvider>(context, listen: false).user =
@@ -128,11 +119,11 @@ class _LoginState extends State<Login> {
         'email',
       ],
     );
-    setState(() {
-      _showModal = true;
-    });
+//    setState(() {
+//      _showModal = true;
+//    });
+    showLoader(isModal: true);
     _googleSignIn.signIn().then((GoogleSignInAccount acc) {
-
       acc.authentication.then((GoogleSignInAuthentication a) async {
 //        print(a.accessToken);
 
@@ -193,10 +184,10 @@ class _LoginState extends State<Login> {
         }
       });
     });
-
-    setState(() {
-      _showModal = false;
-    });
+    hideLoader();
+//    setState(() {
+//      _showModal = false;
+//    });
   }
 
   @override
@@ -206,13 +197,9 @@ class _LoginState extends State<Login> {
 
     return Scaffold(
       appBar: _getAppBar(),
-      body: BaseView(
-        isModal: true,
-        showLoader: _showModal,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: _getLoginForm(),
-          ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: _getLoginForm(),
         ),
       ),
       bottomNavigationBar: LinkToRegisterScreen(),
@@ -311,15 +298,11 @@ class _LoginState extends State<Login> {
   }
 
   _showModalSheet() {
-    setState(() {
-      _showModal = true;
-    });
+    showLoader(isModal: true);
   }
 
   _hideModalSheet() {
-    setState(() {
-      _showModal = false;
-    });
+    hideLoader();
   }
 
   Widget _getAppBar() => MyAppbar(
@@ -360,10 +343,6 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.only(top: Constants.sixteenBy3),
           child: Align(
             alignment: Alignment.center,
-//            child: Image.asset(
-//              Assets.logo,
-//              height: Constants.sixteenBy3,
-//            ),
             child: FlutterLogo(
               size: 128.0,
             ),

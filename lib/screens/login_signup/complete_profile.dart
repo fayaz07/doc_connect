@@ -1,23 +1,23 @@
-import 'package:covid19doc/api/user.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/data_models/user.dart';
-import 'package:covid19doc/providers/auth.dart';
-import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/screens/doctor/doctor_home.dart';
-import 'package:covid19doc/screens/patients/patient_home.dart';
-import 'package:covid19doc/utils/colors.dart';
-import 'package:covid19doc/utils/constants.dart';
-import 'package:covid19doc/utils/dialogs/dialogs.dart';
-import 'package:covid19doc/utils/labels.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/login_signup_widgets.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/platform_widgets.dart';
-import 'package:covid19doc/utils/widgets/text_field_register.dart';
+import 'package:doc_connect/api/user.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/data_models/user.dart';
+import 'package:doc_connect/providers/auth.dart';
+import 'package:doc_connect/providers/user.dart';
+import 'package:doc_connect/screens/doctor/doctor_home.dart';
+import 'package:doc_connect/screens/patients/patient_home.dart';
+import 'package:doc_connect/utils/colors.dart';
+import 'package:doc_connect/utils/constants.dart';
+import 'package:doc_connect/utils/dialogs/dialogs.dart';
+import 'package:doc_connect/utils/labels.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/login_signup_widgets.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/platform_widgets.dart';
+import 'package:doc_connect/utils/widgets/text_field_register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
-import '../base_view.dart';
 
 class FillProfile extends StatefulWidget {
   @override
@@ -38,8 +38,6 @@ class _FillProfileState extends State<FillProfile>
     super.dispose();
   }
 
-  bool _showModal = false;
-
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context).auth;
@@ -50,13 +48,9 @@ class _FillProfileState extends State<FillProfile>
     final userProvider = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: _getAppBar(),
-      body: BaseView(
-        isModal: false,
-        showLoader: _showModal,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: _getPersonalDetailsFromUser(deviceSize, userProvider),
-          ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: _getPersonalDetailsFromUser(deviceSize, userProvider),
         ),
       ),
     );
@@ -156,21 +150,16 @@ class _FillProfileState extends State<FillProfile>
         ),
       );
 
-  _showModalSheet() {
-    setState(() {
-      _showModal = true;
-    });
+  _showModalSheet() async {
+    await showLoader(isModal: true);
   }
 
-  _hideModalSheet() {
-    setState(() {
-      _showModal = false;
-    });
+  _hideModalSheet() async {
+    await hideLoader();
   }
 
   _handleGoBack() {
     Navigator.of(context).pop();
-//    Navigator.of(context).pushReplacement(AppNavigation.route(IntroScreens()));
   }
 
   Widget _getAppBar() => MyAppbar(

@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:covid19doc/api/file_upload.dart';
-import 'package:covid19doc/api/utils/urls.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/screens/doctor/edit_profile.dart';
-import 'package:covid19doc/utils/dialogs/dialogs.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/widgets.dart';
+import 'package:doc_connect/api/file_upload.dart';
+import 'package:doc_connect/api/utils/urls.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/providers/user.dart';
+import 'package:doc_connect/screens/doctor/edit_profile.dart';
+import 'package:doc_connect/utils/dialogs/dialogs.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +15,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class DoctorProfile extends StatefulWidget {
+
+  const DoctorProfile({Key key}) : super(key: key);
+
   @override
   _DoctorProfileState createState() => _DoctorProfileState();
 }

@@ -1,6 +1,6 @@
-import 'package:covid19doc/api/chat.dart';
-import 'package:covid19doc/data_models/chat.dart';
-import 'package:covid19doc/data_models/result.dart';
+import 'package:doc_connect/api/chat.dart';
+import 'package:doc_connect/data_models/chat.dart';
+import 'package:doc_connect/data_models/result.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChatProvider with ChangeNotifier {

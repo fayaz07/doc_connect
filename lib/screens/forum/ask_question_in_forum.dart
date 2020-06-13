@@ -1,15 +1,15 @@
-import 'package:covid19doc/api/forum.dart';
-import 'package:covid19doc/data_models/forum.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/providers/forums.dart';
-import 'package:covid19doc/screens/base_view.dart';
-import 'package:covid19doc/utils/dialogs/dialogs.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/custom_drop_down_button.dart';
-import 'package:covid19doc/utils/widgets/platform_widgets.dart';
-import 'package:covid19doc/utils/widgets/text_field_register.dart';
+import 'package:doc_connect/api/forum.dart';
+import 'package:doc_connect/data_models/forum.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/providers/forums.dart';
+import 'package:doc_connect/utils/dialogs/dialogs.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/custom_drop_down_button.dart';
+import 'package:doc_connect/utils/widgets/platform_widgets.dart';
+import 'package:doc_connect/utils/widgets/text_field_register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
 
 class AskQuestionInForum extends StatefulWidget {
@@ -20,13 +20,10 @@ class AskQuestionInForum extends StatefulWidget {
 class _AskQuestionInForumState extends State<AskQuestionInForum> {
   ForumQuestion forum = ForumQuestion();
   final formKey = GlobalKey<FormState>();
-  bool _showLoader = false;
 
   @override
   Widget build(BuildContext context) {
-    return BaseView(
-      showLoader: false,
-      child: Scaffold(
+    return  Scaffold(
         appBar: MyAppbar(
           handleGoBack: () {
             Navigator.of(context).pop();
@@ -78,7 +75,6 @@ class _AskQuestionInForumState extends State<AskQuestionInForum> {
             ),
           ),
         ),
-      ),
     );
   }
 
@@ -88,9 +84,7 @@ class _AskQuestionInForumState extends State<AskQuestionInForum> {
     }
 
     if (!formKey.currentState.validate()) return;
-    setState(() {
-      _showLoader = true;
-    });
+    showLoader();
     formKey.currentState.save();
     FocusScope.of(context).requestFocus(FocusNode());
     Result result = await ForumAPI.createForum(forum);
@@ -121,9 +115,6 @@ class _AskQuestionInForumState extends State<AskQuestionInForum> {
         ),
       );
     }
-
-    setState(() {
-      _showLoader = false;
-    });
+    hideLoader();
   }
 }

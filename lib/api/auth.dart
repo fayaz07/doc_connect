@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:covid19doc/data_models/auth.dart';
-import 'package:covid19doc/data_models/forum.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/data_models/user.dart';
-import 'package:covid19doc/providers/session.dart';
+import 'package:doc_connect/data_models/auth.dart';
+import 'package:doc_connect/data_models/forum.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/data_models/user.dart';
+import 'package:doc_connect/providers/session.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'utils/logger.dart';

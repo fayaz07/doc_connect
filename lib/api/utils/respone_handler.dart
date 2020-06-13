@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:covid19doc/data_models/result.dart';
+import 'package:doc_connect/data_models/result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 

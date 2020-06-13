@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:covid19doc/api/utils/urls.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/data_models/user.dart';
+import 'package:doc_connect/api/utils/urls.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/data_models/user.dart';
 import 'package:http/http.dart';
 import 'utils/logger.dart';
 import 'utils/respone_handler.dart';

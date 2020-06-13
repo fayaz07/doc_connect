@@ -1,21 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:covid19doc/api/chat.dart';
-import 'package:covid19doc/api/utils/urls.dart';
-import 'package:covid19doc/data_models/chat.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/data_models/user.dart';
-import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/screens/base_view.dart';
-import 'package:covid19doc/screens/chat/chat_screen.dart';
-import 'package:covid19doc/utils/configs.dart';
-import 'package:covid19doc/utils/constants.dart';
-import 'package:covid19doc/utils/dialogs/dialogs.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/platform_widgets.dart';
-import 'package:covid19doc/utils/widgets/widgets.dart';
+import 'package:doc_connect/api/chat.dart';
+import 'package:doc_connect/api/utils/urls.dart';
+import 'package:doc_connect/data_models/chat.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/data_models/user.dart';
+import 'package:doc_connect/providers/user.dart';
+import 'package:doc_connect/screens/chat/chat_screen.dart';
+import 'package:doc_connect/utils/configs.dart';
+import 'package:doc_connect/utils/constants.dart';
+import 'package:doc_connect/utils/dialogs/dialogs.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/platform_widgets.dart';
+import 'package:doc_connect/utils/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
 
 class GuestProfile extends StatefulWidget {
@@ -28,21 +28,16 @@ class GuestProfile extends StatefulWidget {
 }
 
 class _GuestProfileState extends State<GuestProfile> {
-  bool _isLoading = false;
-
   @override
   Widget build(BuildContext context) {
-    return BaseView(
-      showLoader: _isLoading,
-      child: Scaffold(
-        appBar: MyAppbar(
-          handleGoBack: () {
-            Navigator.of(context).pop();
-          },
-          title: ' ${widget.user.is_doctor ? "Doctor" : "Patient"} ',
-        ),
-        body: _getProfile(),
+    return Scaffold(
+      appBar: MyAppbar(
+        handleGoBack: () {
+          Navigator.of(context).pop();
+        },
+        title: ' ${widget.user.is_doctor ? "Doctor" : "Patient"} ',
       ),
+      body: _getProfile(),
     );
   }
 
@@ -159,13 +154,9 @@ class _GuestProfileState extends State<GuestProfile> {
 
   Future<void> initiateChat() async {
     String userId = Provider.of<UserProvider>(context, listen: false).user.id;
-    setState(() {
-      _isLoading = true;
-    });
+    showLoader();
     Result result = await ChatAPI.createOrGetChatId(userId, widget.user.id);
-    setState(() {
-      _isLoading = false;
-    });
+    hideLoader();
     if (result.success) {
       Chat res = result.data;
       if (res.accepted) {
@@ -185,7 +176,6 @@ class _GuestProfileState extends State<GuestProfile> {
           context: context,
           builder: (context) => SuccessDialog(
             title: 'Success',
-
             content:
                 'You request to chat with the doctor has been successfully posted, please wait for the doctor to accept your request, meanwhile checkout chats section for your request approval',
           ),

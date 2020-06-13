@@ -1,13 +1,16 @@
-import 'package:covid19doc/api/chat.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/providers/chat.dart';
-import 'package:covid19doc/utils/configs.dart';
-import 'package:covid19doc/utils/widgets/chat_widget.dart';
+import 'package:doc_connect/api/chat.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/providers/chat.dart';
+import 'package:doc_connect/utils/configs.dart';
+import 'package:doc_connect/utils/widgets/chat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 class Chats extends StatefulWidget {
+
+  const Chats({Key key}) : super(key: key);
+
   @override
   _ChatsState createState() => _ChatsState();
 }

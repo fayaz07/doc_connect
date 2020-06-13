@@ -1,10 +1,10 @@
-import 'package:covid19doc/providers/forums.dart';
-import 'package:covid19doc/providers/patient_data.dart';
-import 'package:covid19doc/screens/forum/view_all_forums.dart';
-import 'package:covid19doc/utils/covid_widgets/covid_warn.dart';
-import 'package:covid19doc/utils/covid_widgets/forum.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/user_widget.dart';
+import 'package:doc_connect/providers/forums.dart';
+import 'package:doc_connect/providers/patient_data.dart';
+import 'package:doc_connect/screens/forum/view_all_forums.dart';
+import 'package:doc_connect/utils/covid_widgets/covid_warn.dart';
+import 'package:doc_connect/utils/covid_widgets/forum.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';

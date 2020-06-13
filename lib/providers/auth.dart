@@ -1,4 +1,4 @@
-import 'package:covid19doc/data_models/auth.dart';
+import 'package:doc_connect/data_models/auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider with ChangeNotifier {

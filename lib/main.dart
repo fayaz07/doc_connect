@@ -1,14 +1,15 @@
-import 'package:covid19doc/providers/auth.dart';
-import 'package:covid19doc/providers/chat.dart';
-import 'package:covid19doc/providers/current_forum_data.dart';
-import 'package:covid19doc/providers/doctor_data.dart';
-import 'package:covid19doc/providers/forums.dart';
-import 'package:covid19doc/providers/patient_data.dart';
-import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/screens/login_signup/splash.dart';
-import 'package:covid19doc/utils/colors.dart';
+import 'package:doc_connect/providers/auth.dart';
+import 'package:doc_connect/providers/chat.dart';
+import 'package:doc_connect/providers/current_forum_data.dart';
+import 'package:doc_connect/providers/doctor_data.dart';
+import 'package:doc_connect/providers/forums.dart';
+import 'package:doc_connect/providers/patient_data.dart';
+import 'package:doc_connect/providers/user.dart';
+import 'package:doc_connect/screens/login_signup/splash.dart';
+import 'package:doc_connect/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(Covid19Doc());
@@ -38,13 +39,16 @@ class Covid19Doc extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => ChatProvider(),
-        )
+        ),
       ],
-      child: MaterialApp(
-        home: SplashScreen(),
-        title: 'Covid 19 Doc',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(primaryColor: AppColors.primary),
+      child: OTS(
+        showNetworkUpdates: true,
+        child: MaterialApp(
+          home: SplashScreen(),
+          title: 'Doc Connect',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(primaryColor: AppColors.primary),
+        ),
       ),
     );
   }

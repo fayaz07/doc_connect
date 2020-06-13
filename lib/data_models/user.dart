@@ -1,4 +1,4 @@
-import 'package:covid19doc/data_models/user_review.dart';
+import 'package:doc_connect/data_models/user_review.dart';
 
 class User {
   // ignore: non_constant_identifier_names

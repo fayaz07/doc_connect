@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:covid19doc/api/utils/urls.dart';
-import 'package:covid19doc/data_models/result.dart';
+import 'package:doc_connect/api/utils/urls.dart';
+import 'package:doc_connect/data_models/result.dart';
 import 'package:dio/dio.dart';
 
 class FileUpload {

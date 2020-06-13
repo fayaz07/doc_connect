@@ -1,4 +1,4 @@
-import 'package:covid19doc/providers/session.dart';
+import 'package:doc_connect/providers/session.dart';
 
 class Urls {
 //  static const String _baseURL = "http://192.168.43.170:3000/api/v1/";

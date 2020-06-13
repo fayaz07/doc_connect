@@ -1,20 +1,16 @@
-
-import 'package:covid19doc/api/auth.dart';
-import 'package:covid19doc/data_models/result.dart';
-import 'package:covid19doc/utils/dialogs/dialogs.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/platform_widgets.dart';
-import 'package:covid19doc/utils/widgets/text_field_register.dart';
+import 'package:doc_connect/api/auth.dart';
+import 'package:doc_connect/data_models/result.dart';
+import 'package:doc_connect/utils/dialogs/dialogs.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/platform_widgets.dart';
+import 'package:doc_connect/utils/widgets/text_field_register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../base_view.dart';
+import 'package:ots/ots.dart';
 import 'login.dart';
 
-
 class ResetPassword extends StatefulWidget {
-
   final String email;
 
   const ResetPassword({Key key, this.email}) : super(key: key);
@@ -25,7 +21,7 @@ class ResetPassword extends StatefulWidget {
 
 class _ResetPasswordState extends State<ResetPassword>
     with SingleTickerProviderStateMixin {
-  bool _isLoading = false, _enableSubmitButton = false;
+  bool _enableSubmitButton = false;
   TextEditingController _otpController = TextEditingController();
   TextEditingController _newPassword = TextEditingController();
   TextEditingController _confirmPassword = TextEditingController();
@@ -53,47 +49,43 @@ class _ResetPasswordState extends State<ResetPassword>
       appBar: MyAppbar(
         title: 'Reset Password',
       ),
-      body: BaseView(
-        isModal: true,
-        showLoader: _isLoading,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).size.height * 0.10),
 
-              /// Enter the OTP
-              getTitle('Please enter the OTP you have recieved in your email'),
-              Align(
-                alignment: Alignment.center,
-                child: WrappedTextFieldWithCard(
-                  controller: _otpController,
-                  label: "Enter OTP",
-                  maxLength: 6,
-                ),
+            /// Enter the OTP
+            getTitle('Please enter the OTP you have recieved in your email'),
+            Align(
+              alignment: Alignment.center,
+              child: WrappedTextFieldWithCard(
+                controller: _otpController,
+                label: "Enter OTP",
+                maxLength: 6,
               ),
+            ),
 
-              /// Enter new password here
-              /// this will be shown, when the otp is valid, i.e., 6 digits
-              SizeTransition(
-                sizeFactor: _scaleAnim,
-                child: _getNewPasswordForm(),
-              ),
+            /// Enter new password here
+            /// this will be shown, when the otp is valid, i.e., 6 digits
+            SizeTransition(
+              sizeFactor: _scaleAnim,
+              child: _getNewPasswordForm(),
+            ),
 
-              SizedBox(height: 32.0),
-              Align(
-                alignment: Alignment.center,
-                child: EnableDisableButton(
-                  onPressed: _resetPassword,
-                  text: 'SUBMIT',
-                  enabled: _enableSubmitButton,
-                ),
+            SizedBox(height: 32.0),
+            Align(
+              alignment: Alignment.center,
+              child: EnableDisableButton(
+                onPressed: _resetPassword,
+                text: 'SUBMIT',
+                enabled: _enableSubmitButton,
               ),
-              SizedBox(height: 64.0)
-            ],
-          ),
+            ),
+            SizedBox(height: 64.0)
+          ],
         ),
       ),
     );
@@ -173,12 +165,14 @@ class _ResetPasswordState extends State<ResetPassword>
         _confirmPasswd.length > 6 &&
         _newPasswd.trim() == _confirmPasswd.trim()) {
       /// showing loader
-      setState(() {
-        _isLoading = true;
-      });
-
+//      setState(() {
+//        _isLoading = true;
+//      });
+      showLoader(isModal: true);
       Result result = await AuthAPI.resetPassword(
-          email: widget.email, newPassword: _newPasswd.trim(), otp: _otpController.text.trim());
+          email: widget.email,
+          newPassword: _newPasswd.trim(),
+          otp: _otpController.text.trim());
       if (result.success) {
         showDialog(
           context: context,
@@ -209,9 +203,7 @@ class _ResetPasswordState extends State<ResetPassword>
       }
 
       /// hiding loader
-      setState(() {
-        _isLoading = false;
-      });
+      hideLoader();
     } else {
       showDialog(
         context: context,

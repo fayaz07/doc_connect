@@ -1,4 +1,4 @@
-import 'package:covid19doc/data_models/forum.dart';
+import 'package:doc_connect/data_models/forum.dart';
 import 'package:flutter/cupertino.dart';
 
 class CurrentForumData with ChangeNotifier {

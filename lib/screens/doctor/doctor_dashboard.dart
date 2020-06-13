@@ -1,18 +1,16 @@
-import 'package:covid19doc/providers/doctor_data.dart';
-import 'package:covid19doc/providers/forums.dart';
-import 'package:covid19doc/screens/forum/view_all_forums.dart';
-import 'package:covid19doc/utils/covid_widgets/covid_warn.dart';
-import 'package:covid19doc/utils/covid_widgets/forum.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/user_widget.dart';
+import 'package:doc_connect/providers/doctor_data.dart';
+import 'package:doc_connect/providers/forums.dart';
+import 'package:doc_connect/screens/forum/view_all_forums.dart';
+import 'package:doc_connect/utils/covid_widgets/covid_warn.dart';
+import 'package:doc_connect/utils/covid_widgets/forum.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 class DoctorDashboard extends StatefulWidget {
-  final DoctorDataProvider dataProvider;
-
-  const DoctorDashboard({Key key, this.dataProvider}) : super(key: key);
+  const DoctorDashboard({Key key}) : super(key: key);
 
   @override
   _DoctorDashboardState createState() => _DoctorDashboardState();
@@ -22,7 +20,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
   @override
   Widget build(BuildContext context) {
     final forumsProvider = Provider.of<ForumsProvider>(context);
-
+    final doctorData = Provider.of<DoctorDataProvider>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SingleChildScrollView(
@@ -33,7 +31,7 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
             CovidWarn(),
 
             ///----------- forums
-            _getForums(widget.dataProvider, forumsProvider),
+            _getForums(doctorData, forumsProvider),
 
             /// ----
             /// --- show nearby patients
@@ -65,9 +63,9 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
               ],
             ),
 
-            widget.dataProvider.nearbyPatients.length > 0
+            doctorData.nearbyPatients.length > 0
                 ? UserWidget(
-                    user: widget.dataProvider.nearbyPatients[0],
+                    user: doctorData.nearbyPatients[0],
                   )
                 : SizedBox(
                     child: Center(
@@ -75,9 +73,9 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
                     ),
                   ),
 
-            widget.dataProvider.nearbyPatients.length > 1
+            doctorData.nearbyPatients.length > 1
                 ? UserWidget(
-                    user: widget.dataProvider.nearbyPatients[1],
+                    user: doctorData.nearbyPatients[1],
                   )
                 : SizedBox(),
           ],

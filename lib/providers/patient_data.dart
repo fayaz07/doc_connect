@@ -1,4 +1,4 @@
-import 'package:covid19doc/data_models/user.dart';
+import 'package:doc_connect/data_models/user.dart';
 import 'package:flutter/foundation.dart';
 
 class PatientDataProvider with ChangeNotifier {

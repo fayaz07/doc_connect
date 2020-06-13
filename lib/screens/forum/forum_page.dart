@@ -1,22 +1,19 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:covid19doc/api/utils/urls.dart';
-import 'package:covid19doc/data_models/forum.dart';
-import 'package:covid19doc/providers/current_forum_data.dart';
-import 'package:covid19doc/providers/session.dart';
-import 'package:covid19doc/providers/user.dart';
-import 'package:covid19doc/screens/forum/respond_forum.dart';
-import 'package:covid19doc/utils/configs.dart';
-import 'package:covid19doc/utils/constants.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
+import 'package:doc_connect/api/utils/urls.dart';
+import 'package:doc_connect/data_models/forum.dart';
+import 'package:doc_connect/providers/current_forum_data.dart';
+import 'package:doc_connect/providers/session.dart';
+import 'package:doc_connect/providers/user.dart';
+import 'package:doc_connect/screens/forum/respond_forum.dart';
+import 'package:doc_connect/utils/configs.dart';
+import 'package:doc_connect/utils/constants.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-void main() => runApp(MaterialApp(home: ForumPage()));
 
 class ForumPage extends StatefulWidget {
   final ForumQuestion forumQuestion;
@@ -61,6 +58,7 @@ class _ForumPageState extends State<ForumPage> {
     final provider = Provider.of<CurrentForumData>(context, listen: false);
 
     _forumSocket.on('user_data', (data) {
+//      print(data);
       provider.authorGender = data["gender"] ?? "Male";
       provider.location = data["location"];
       provider.authorAge = data["age"].toString();
@@ -75,14 +73,14 @@ class _ForumPageState extends State<ForumPage> {
         }
         provider.addAll(list);
 
-        try {
-          Future.delayed(Duration(milliseconds: 100)).whenComplete(() {
-            scrollController.animateTo(
-                scrollController.position.maxScrollExtent,
-                duration: Duration(milliseconds: 100),
-                curve: Curves.linear);
-          });
-        } catch (err) {}
+//        try {
+//          Future.delayed(Duration(milliseconds: 100)).whenComplete(() {
+//            scrollController.animateTo(
+//                scrollController.position.maxScrollExtent,
+//                duration: Duration(milliseconds: 100),
+//                curve: Curves.linear);
+//          });
+//        } catch (err) {}
       }
     });
 
@@ -148,6 +146,9 @@ class _ForumPageState extends State<ForumPage> {
               children: <Widget>[
                 _buildQuestion(provider),
               ]
+                ..add(SizedBox(height: 16.0))
+                ..add(Text(' Responses', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700)))
+                ..add(SizedBox(height: 4.0))
                 ..addAll(_buildAnswers(provider))
                 ..add(SizedBox(height: 60.0)),
             ),
@@ -386,7 +387,7 @@ class _ForumPageState extends State<ForumPage> {
     if (now.difference(dateTime).inMinutes > 59) {
       if (now.difference(dateTime).inHours > 24) {
         if (now.difference(dateTime).inDays > 30) {
-          return " ${now.difference(dateTime).inDays / 30} months ago";
+          return " ${(now.difference(dateTime).inDays / 30).round()} months ago";
         } else {
           return " ${now.difference(dateTime).inDays} days ago";
         }

@@ -1,7 +1,7 @@
-import 'package:covid19doc/data_models/forum.dart';
-import 'package:covid19doc/providers/current_forum_data.dart';
-import 'package:covid19doc/screens/forum/forum_page.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
+import 'package:doc_connect/data_models/forum.dart';
+import 'package:doc_connect/providers/current_forum_data.dart';
+import 'package:doc_connect/screens/forum/forum_page.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

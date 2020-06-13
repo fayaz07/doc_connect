@@ -1,6 +1,6 @@
-import 'package:covid19doc/data_models/forum.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/text_field_register.dart';
+import 'package:doc_connect/data_models/forum.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/text_field_register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 

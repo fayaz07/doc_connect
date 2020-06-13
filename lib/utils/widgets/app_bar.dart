@@ -1,4 +1,4 @@
-import 'package:covid19doc/utils/colors.dart';
+import 'package:doc_connect/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

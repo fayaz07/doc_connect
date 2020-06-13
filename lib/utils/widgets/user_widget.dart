@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:covid19doc/api/utils/urls.dart';
-import 'package:covid19doc/data_models/user.dart';
-import 'package:covid19doc/screens/guest_profile.dart';
-import 'package:covid19doc/utils/configs.dart';
-import 'package:covid19doc/utils/constants.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
+import 'package:doc_connect/api/utils/urls.dart';
+import 'package:doc_connect/data_models/user.dart';
+import 'package:doc_connect/screens/guest_profile.dart';
+import 'package:doc_connect/utils/configs.dart';
+import 'package:doc_connect/utils/constants.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 

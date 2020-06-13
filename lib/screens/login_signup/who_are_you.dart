@@ -1,9 +1,9 @@
-import 'package:covid19doc/api/auth.dart';
-import 'package:covid19doc/screens/login_signup/login.dart';
-import 'package:covid19doc/screens/login_signup/signup.dart';
-import 'package:covid19doc/utils/widgets/app_bar.dart';
-import 'package:covid19doc/utils/widgets/navigation.dart';
-import 'package:covid19doc/utils/widgets/widgets.dart';
+import 'package:doc_connect/api/auth.dart';
+import 'package:doc_connect/screens/login_signup/login.dart';
+import 'package:doc_connect/screens/login_signup/signup.dart';
+import 'package:doc_connect/utils/widgets/app_bar.dart';
+import 'package:doc_connect/utils/widgets/navigation.dart';
+import 'package:doc_connect/utils/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
