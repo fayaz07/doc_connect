@@ -1,16 +1,31 @@
-class Result {
+class Result<T> {
+  int statusCode;
   String message;
   bool success;
-  int statusCode;
-  dynamic data;
-  bool hasData;
+  T data;
 
-  Result({this.message="", this.success = false, this.statusCode, this.data}) {
-    this.hasData = (this.data == null) ? false : true;
+  Result({this.statusCode, this.message, this.success = false, this.data});
+
+  Result.success({this.statusCode, this.message, this.data}) {
+    this.success = true;
+  }
+
+  Result.fail({this.statusCode, this.message}) {
+    this.success = false;
+  }
+
+  Result.internalServerError({this.message}) {
+    this.success = false;
+    this.statusCode = 500;
+  }
+
+  Result.exception({this.message}) {
+    this.success = false;
   }
 
   @override
   String toString() {
-    return 'Result {message: $message, success: $success, statusCode: $statusCode, hasData: $hasData, data: $data}';
+    return 'Result{statusCode: $statusCode, message: $message,'
+        ' success: $success, data: $data}';
   }
 }

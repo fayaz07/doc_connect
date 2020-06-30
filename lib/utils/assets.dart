@@ -1,16 +1,6 @@
 class Assets {
-  static final String logo = "assets/logo.png";
-  static final String logo512x512 = "assets/logo_512x512.png";
-
-  //  intro screen
-  // ignore: non_constant_identifier_names
-  static final String undraw_celebration = "assets/undraw_celebration.png";
-  // ignore: non_constant_identifier_names
-  static final String undraw_messaging = "assets/undraw_messaging.png";
-  // ignore: non_constant_identifier_names
-  static final String undraw_dev_productivity =
-      "assets/undraw_dev_productivity.png";
-  // ignore: non_constant_identifier_names
-  static final String undraw_problem_solving =
-      "assets/undraw_problem_solving.png";
+  static const _assetsRoot = "assets/";
+  static const treatment = _assetsRoot + "treatment.png";
+  static const appointment = _assetsRoot + "appointment.png";
+  static const health_tips = _assetsRoot + "health_tips.png";
 }

@@ -1,6 +1,6 @@
 # doc_connect
 
-A new Flutter application.
+A Flutter application that connects Patients and Doctors
 
 ## Getting Started
 

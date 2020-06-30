@@ -1,21 +1,29 @@
 class Auth {
-  String email;
   String authToken;
   String refreshToken;
-  bool loggedIn;
-  bool social;
-  bool isDoctor;
+  UserType userType;
 
-  Auth(
-      {this.email,
-      this.authToken,
-      this.refreshToken,
-      this.loggedIn,
-      this.social,
-      this.isDoctor});
+  Auth({this.authToken, this.refreshToken, this.userType});
 
-  @override
-  String toString() {
-    return 'Auth{email: $email, authToken: $authToken, refreshToken: $refreshToken, loggedIn: $loggedIn, isDoctor: $isDoctor}';
+  static UserType fromString(String key) {
+    if (key.contains("Doctor"))
+      return UserType.Doctor;
+    else
+      return UserType.Patient;
+  }
+}
+
+enum UserType { Doctor, Patient }
+
+extension UTExtension on UserType {
+  UserType fromString(String key) {
+    if (key.contains("Doctor"))
+      return UserType.Doctor;
+    else
+      return UserType.Patient;
+  }
+
+  String value() {
+    return this.toString().substring(8);
   }
 }
