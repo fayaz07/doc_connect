@@ -42,7 +42,6 @@ class DocConnectApp extends StatelessWidget {
 
     return PlatformApp(
       title: 'Doc Connect',
-      key: Key(UniqueKey().toString()),
       home: IntroScreens(),
       material: (context, platformTarget) => MaterialAppData(
         theme: AppTheme.light,
