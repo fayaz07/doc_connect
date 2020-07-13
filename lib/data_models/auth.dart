@@ -11,6 +11,11 @@ class Auth {
     else
       return UserType.Patient;
   }
+
+  @override
+  String toString() {
+    return 'Auth{authToken: $authToken, refreshToken: $refreshToken, userType: $userType}';
+  }
 }
 
 enum UserType { Doctor, Patient }

@@ -6,6 +6,13 @@ class Result<T> {
 
   Result({this.statusCode, this.message, this.success = false, this.data});
 
+  factory Result.fromJSON(var json) {
+    return Result<T>(
+      success: json['status'].toString().contains("success") ? true : false,
+      message: json['message'],
+    );
+  }
+
   Result.success({this.statusCode, this.message, this.data}) {
     this.success = true;
   }
