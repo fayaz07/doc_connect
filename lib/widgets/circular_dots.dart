@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-const _kDotSize = 8.0;
+const _kDotSize = 10.0;
 const _kDotPadding = 4.0;
 
 class FilledDot extends StatelessWidget {
@@ -32,7 +32,7 @@ class BlankDot extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
+            borderRadius: BorderRadius.circular(_kDotSize/2),
             side: BorderSide(
               color: Theme.of(context).accentColor,
             ),

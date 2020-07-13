@@ -1,7 +1,5 @@
-import 'package:doc_connect/services/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class IntroPage extends StatelessWidget {
   final String asset, title, description;

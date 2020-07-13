@@ -1,5 +1,7 @@
 import 'package:doc_connect/utils/assets.dart';
+import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/views/intro_screens/page.dart';
+import 'package:doc_connect/views/registration/registration_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
@@ -40,7 +42,7 @@ class IntroScreensViewModel extends ChangeNotifier {
   }
 
   navigateToLoginScreen(){
-
+    Navigator.of(_context).pushReplacement(AppNavigation.route(RegistrationScreen()));
   }
 
   ///--------------------------------- getters and setters----------------------
