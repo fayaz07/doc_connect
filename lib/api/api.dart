@@ -26,6 +26,9 @@ abstract class DocConnectAPI extends ChopperService {
   @Post(path: Urls.googleAuth)
   Future<Response<dynamic>> googleAuth(@body dynamic body);
 
+  @Patch(path: Urls.fcmId)
+  Future<Response<dynamic>> updateFCMId(@body dynamic body);
+
   /// dashboard api
   @Get(path: Urls.dashboard)
   Future<Response<dynamic>> getDashboard();
@@ -64,6 +67,19 @@ abstract class DocConnectAPI extends ChopperService {
 
   @Post(path: Urls.downVoteForumResponse)
   Future<Response<dynamic>> downVoteForumR(@body dynamic body);
+
+  /// Chat
+  @Get(path: Urls.getChats)
+  Future<Response<dynamic>> getChats();
+
+  @Post(path: Urls.getChatRoomId)
+  Future<Response<dynamic>> createORGetChatRoomId(@body dynamic body);
+
+  @Patch(path: Urls.acceptChatRequest)
+  Future<Response<dynamic>> acceptChatRequest(@body dynamic body);
+
+  @Patch(path: Urls.rejectChatRequest)
+  Future<Response<dynamic>> rejectChatRequest(@body dynamic body);
 
   static DocConnectAPI create() {
     final client = ChopperClient(

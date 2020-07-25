@@ -73,32 +73,35 @@ class Profile extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(8.0),
                 onTap: model.uploadProfilePicture,
-                child: Material(
-                  clipBehavior: Clip.antiAlias,
-                  type: MaterialType.circle,
-                  color: Colors.grey.withOpacity(0.3),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Material(
-                      clipBehavior: Clip.antiAlias,
-                      type: MaterialType.circle,
-                      color: Colors.greenAccent,
-                      child: model.user.photoUrl == null
-                          ? Center(
-                              child: Text(
-                                '${model.user.firstName?.substring(0, 1) ?? 'A'}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 32.0,
-                                  fontWeight: FontWeight.bold,
+                child: Hero(
+                  tag: 'user-profile',
+                  child: Material(
+                    clipBehavior: Clip.antiAlias,
+                    type: MaterialType.circle,
+                    color: Colors.grey.withOpacity(0.3),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Material(
+                        clipBehavior: Clip.antiAlias,
+                        type: MaterialType.circle,
+                        color: Colors.greenAccent,
+                        child: model.user.photoUrl == null
+                            ? Center(
+                                child: Text(
+                                  '${model.user.firstName?.substring(0, 1) ?? 'A'}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 32.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: model.user.photoUrl,
+                                fadeInCurve: Curves.easeIn,
+                                fit: BoxFit.cover,
                               ),
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: model.user.photoUrl,
-                              fadeInCurve: Curves.easeIn,
-                              fit: BoxFit.cover,
-                            ),
+                      ),
                     ),
                   ),
                 ),

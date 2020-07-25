@@ -254,3 +254,104 @@ class AppBarAction extends StatelessWidget {
     );
   }
 }
+
+class Selectable extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final bool selected;
+
+  const Selectable({Key key, this.text, this.onPressed, this.selected})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      //splashColor: Colors.transparent,
+      onTap: onPressed,
+      child: Card(
+        margin: const EdgeInsets.all(4.0),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.0)),
+        elevation: selected ? 8.0 : 4.0,
+        color: selected ? Colors.blue : Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Text(
+            text,
+            style: TextStyle(
+                color: selected ? Colors.white : Colors.blue,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SelectableColorOrText extends StatelessWidget {
+  final String text;
+  final Color color;
+  final VoidCallback onPressed;
+  final bool selected;
+  final double fontSize;
+  final FontWeight fontWeight;
+
+  const SelectableColorOrText(
+      {Key key,
+      this.text,
+      this.onPressed,
+      this.selected = false,
+      this.color,
+      this.fontSize = 18.0,
+      this.fontWeight = FontWeight.w600})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      //splashColor: Colors.transparent,
+      onTap: onPressed,
+      child: Container(
+        height: 100.0,
+        width: 100.0,
+        margin: const EdgeInsets.all(4.0),
+        color: color ?? Colors.white54,
+        child: Stack(
+          children: <Widget>[
+            text == null
+                ? SizedBox()
+                : Center(
+                    child: Text(
+                      text,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: fontSize,
+                          fontWeight: fontWeight),
+                    ),
+                  ),
+            AnimatedSwitcher(
+              transitionBuilder: (Widget child, Animation<double> anim) =>
+                  ScaleTransition(
+                child: child,
+                scale: anim,
+              ),
+              duration: Duration(milliseconds: 100),
+              child: selected
+                  ? Center(
+                      child: Opacity(
+                        opacity: 0.45,
+                        child: Icon(
+                          Icons.check,
+                          size: 64.0,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,82 +1,61 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:doc_connect/services/forums.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/views/forum/forum_widgets.dart';
 import 'package:doc_connect/views/home/home_view_model.dart';
+import 'package:doc_connect/widgets/avatar.dart';
 import 'package:doc_connect/widgets/buttons.dart';
 import 'package:doc_connect/widgets/doctor.dart';
 import 'package:doc_connect/widgets/patient.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeScreenViewModel>.reactive(
       viewModelBuilder: () => HomeScreenViewModel(),
       onModelReady: (m) => m.instantiate(context),
-      builder: (context, model, child) => PlatformScaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _getHeader(model),
-                  SizedBox(height: 16.0),
-                  TitleWithButton(
-                    title: 'Tips of the day',
-                    onPressed: () {
-                      print("Hello");
-                    },
-                  ),
-                  SizedBox(height: 8.0),
-                  TipsCarousel(model: model),
-                  SizedBox(height: 16.0),
-                  TitleWithButton(
-                    title:
-                        'Nearby ${model.user.isDoctor ? "Patients" : "Doctors"}',
-                    onPressed: () {
-                      print("Hello");
-                    },
-                  ),
-                  SizedBox(height: 4.0),
-                  model.user.isDoctor ? NearbyPatients() : NearbyDoctors(),
-                  SizedBox(height: 8.0),
-                  TitleWithButton(
-                    title: 'Forums',
-                    onPressed: model.goToForums,
-                  ),
-                  SizedBox(height: 4.0),
-                  TopForums(),
-                ],
-              ),
+      builder: (context, model, child) => SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _getHeader(model),
+                SizedBox(height: 16.0),
+                TitleWithButton(
+                  title: 'Tips of the day',
+                  onPressed: () {
+                    print("Hello");
+                  },
+                ),
+                SizedBox(height: 8.0),
+                TipsCarousel(model: model),
+                SizedBox(height: 16.0),
+                TitleWithButton(
+                  title:
+                      'Nearby ${model.user.isDoctor ? "Patients" : "Doctors"}',
+                  onPressed: () {
+                    print("Hello");
+                  },
+                ),
+                SizedBox(height: 4.0),
+                model.user.isDoctor ? NearbyPatients() : NearbyDoctors(),
+                SizedBox(height: 8.0),
+                TitleWithButton(
+                  title: 'Forums',
+                  onPressed: model.goToForums,
+                ),
+                SizedBox(height: 4.0),
+                TopForums(),
+              ],
             ),
           ),
-        ),
-        bottomNavBar: PlatformNavBar(
-          currentIndex: model.currentScreenIndex,
-          itemChanged: model.screenChanged,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text('Home')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), title: Text('Notifications')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.chat), title: Text('Chats')),
-          ],
         ),
       ),
     );
@@ -95,29 +74,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Spacer(),
           InkWell(
             onTap: model.goToProfileScreen,
-            child: SizedBox(
-              height: 36.0,
-              width: 36.0,
-              child: Material(
-                clipBehavior: Clip.antiAlias,
-                type: MaterialType.circle,
-                color: Colors.greenAccent,
-                child: model.user.photoUrl == null
-                    ? Center(
-                        child: Text(
-                          '${model.user.firstName?.substring(0, 1) ?? 'A'}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: model.user.photoUrl,
-                        fadeInCurve: Curves.easeIn,
-                        fit: BoxFit.cover,
-                      ),
+            child: Hero(
+              tag: 'user-profile',
+              child: GetAvatar(
+                firstName: model.user.firstName,
+                photoUrl: model.user.photoUrl,
               ),
             ),
           )
@@ -174,17 +135,23 @@ class NearbyDoctors extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nearByDoctors = Provider.of<UsersProvider>(context).doctors.keys.toList();
+    final nearByDoctors =
+    Provider
+        .of<UsersProvider>(context)
+        .doctors
+        .keys
+        .toList();
     return SizedBox(
       height: 150.0,
       child: nearByDoctors.length == 0
           ? Center(
-              child: Text('No doctors here'),
-            )
+        child: Text('No doctors here'),
+      )
           : ListView.builder(
-              itemCount: nearByDoctors.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, i) => DoctorWidget(
+        itemCount: nearByDoctors.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, i) =>
+            DoctorWidget(
                 i: i,
                 doctorId: nearByDoctors[i],
               ),
@@ -200,17 +167,23 @@ class NearbyPatients extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nearByPatients = Provider.of<UsersProvider>(context).patients.keys.toList();
+    final nearByPatients =
+    Provider
+        .of<UsersProvider>(context)
+        .patients
+        .keys
+        .toList();
     return SizedBox(
       height: 150.0,
       child: nearByPatients.length == 0
           ? Center(
-              child: Text('No patients here'),
-            )
+        child: Text('No patients here'),
+      )
           : ListView.builder(
-              itemCount: nearByPatients.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, i) => PatientWidget(
+        itemCount: nearByPatients.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, i) =>
+            PatientWidget(
                 i: i,
                 patientId: nearByPatients[i],
               ),

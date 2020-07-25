@@ -1,7 +1,8 @@
 class Chat {
   String id;
   String requestedBy;
-  List<dynamic> users;
+  bool requestedBySelf;
+  List<ChatUser> users;
   DateTime createdOn;
   bool accepted, rejected;
 
@@ -12,17 +13,30 @@ class Chat {
     this.requestedBy,
     this.accepted,
     this.rejected,
+    this.requestedBySelf,
   });
 
-  factory Chat.fromJSON(var map) {
+  factory Chat.fromJSON(var map, String currUserId) {
     return Chat(
-      createdOn: DateTime.parse(map['created_on']),
+//      createdOn: map['created_on'] != null
+//          ? DateTime.parse(map['created_on'])
+//          : DateTime.now(),
       id: map['_id'],
-      users: map['users'],
+      users: ChatUser.fromJSONList(map['users'], currUserId),
       requestedBy: map['requested_by'],
       accepted: map['accepted'],
       rejected: map['rejected'],
+      requestedBySelf: map['requested_by'].toString().contains(currUserId),
     );
+  }
+
+  static Map<String, Chat> parseAsMap(var jsonList, String currUserId) {
+    Map<String, Chat> _mappedChats = Map();
+    for (var c in jsonList) {
+      final chat = Chat.fromJSON(c, currUserId);
+      _mappedChats[chat.id] = chat;
+    }
+    return _mappedChats;
   }
 
   static Map<String, dynamic> toJSON(Chat chat) {
@@ -42,39 +56,51 @@ class Chat {
   }
 }
 
-class InboxModel {
-  Chat chat;
+class ChatUser {
+  String firstName, lastName, photoUrl, userId;
 
-  String lastMessage, photoUrl, name;
+  ChatUser({this.firstName, this.lastName, this.photoUrl, this.userId});
 
-  InboxModel({this.chat, this.lastMessage, this.photoUrl, this.name});
+  static ChatUser fromJSON(var map) {
+    return ChatUser(
+      userId: map['user_id'],
+      firstName: map['first_name'],
+      lastName: map['last_name'],
+      photoUrl: map['photo_url'],
+    );
+  }
+
+  static List<ChatUser> fromJSONList(var list, String currUserId) {
+    List<ChatUser> _kList = [];
+    for (var c in list) {
+      final chUser = ChatUser.fromJSON(c);
+      if (!chUser.userId.contains(currUserId)) _kList.add(chUser);
+    }
+    return _kList;
+  }
 }
 
 class Message {
-  String roomId, authorId, author, message;
+  String id;
+  String roomId, authorId, message;
   DateTime time;
 
-  Message(
-      {this.roomId,
-      this.authorId,
-      this.author,
-      this.message,
-      this.time});
+  Message({this.id, this.roomId, this.authorId, this.message, this.time});
 
   factory Message.fromJSON(var map) {
     return Message(
-        message: map['message'],
-        authorId: map['author_id'],
-        roomId: map['room_id'],
-        author: map['author'],
-        time: DateTime.parse(map['time']));
+      id: map["_id"],
+      message: map['message'],
+      authorId: map['author_id'],
+      roomId: map['room_id'],
+      time: DateTime.parse(map['time']),
+    );
   }
 
   static Map<String, dynamic> toJSON(Message message) {
     return {
       "message": message.message,
       "room_id": message.roomId,
-      "author": message.author,
       "author_id": message.authorId,
     };
   }
