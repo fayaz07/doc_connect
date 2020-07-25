@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/response/oauth.dart';
 import 'package:doc_connect/services/auth.dart';
+import 'package:doc_connect/services/fcm.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
-import 'package:doc_connect/views/home/home.dart';
 import 'package:doc_connect/views/profile/select_user_type.dart';
 import 'package:doc_connect/views/registration/login_sign_up.dart';
+import 'package:doc_connect/views/tabs_screen/tabs_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -62,14 +63,24 @@ class RegistrationViewModel extends ChangeNotifier {
         await compute(OAuthResponse.fromJSON, json.decode(response.body));
     hideLoader();
     if (oAuthResponse.success) {
+      _updateFCMId();
+      // todo: fetch nearby doctors/patients
       Provider.of<UsersProvider>(_context, listen: false).user =
           oAuthResponse.user;
       AuthService.parseHeadersAndStoreAuthData(
           response, oAuthResponse.user.isDoctor);
       Navigator.of(_context).pushReplacement(AppNavigation.route(
-          oAuthResponse.signup ? SelectUserType() : HomeScreen()));
+          oAuthResponse.signup ? SelectUserType() : TabsScreen()));
     } else {
       AppToast.showLong(text: oAuthResponse.message);
+    }
+  }
+
+  void _updateFCMId() {
+    try {
+      FCMService()..createInstanceId();
+    } catch (err) {
+      throw err;
     }
   }
 

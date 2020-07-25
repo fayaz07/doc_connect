@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Color;
+import 'package:flutter/material.dart' show Color, Colors;
 
 class AppColors {
   static final List<Color> cardColors = [
@@ -31,4 +31,8 @@ class AppColors {
     "f7d6e0",
     "f2b5d4"
   ].toSet().map((e) => Color(int.parse("0xff$e"))).toList();
+
+  static const infoColor = Colors.lightBlue;
+  static const danger = Colors.redAccent;
+  static const green = Colors.green;
 }

@@ -5,8 +5,11 @@ class OutlinedTextField extends StatelessWidget {
   final String hint;
   final String label;
   final int validateLength;
+  final Function(String) onChange;
+  final Function(String) validator;
   final Function(String) save;
   final bool isObscure;
+  final TextInputType textInputType;
   final int maxLength;
   final TextEditingController controller;
   final int maxLines;
@@ -20,40 +23,32 @@ class OutlinedTextField extends StatelessWidget {
       this.hint,
       this.label,
       this.validateLength,
-      this.save,
-      this.isObscure,
-      this.maxLength,
-      this.controller,
-      this.maxLines,
-      this.initialValue,
-      this.suffixIcon,
-      this.padding = const EdgeInsets.all(0.0),
-      this.suffix,
-      this.contentPadding =
-          const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0)})
+    this.save,
+    this.isObscure,
+    this.maxLength,
+    this.controller,
+    this.maxLines,
+    this.initialValue,
+    this.suffixIcon,
+    this.padding = const EdgeInsets.all(0.0),
+    this.suffix,
+    this.contentPadding =
+    const EdgeInsets.symmetric(vertical: 4.0,
+        horizontal: 16.0), this.textInputType, this.validator, this.onChange})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var keyboard;
-    if (label.toLowerCase().contains("phone") ||
-        label.toLowerCase().contains("otp"))
-      keyboard = TextInputType.phone;
-    else if (label.toLowerCase().contains("email"))
-      keyboard = TextInputType.emailAddress;
-    else if (label.toLowerCase().contains("age"))
-      keyboard = TextInputType.number;
-    else
-      keyboard = TextInputType.text;
 
     return SizedBox(
       width: double.infinity,
       child: Padding(
         padding: padding,
         child: TextFormField(
+          onChanged: onChange,
           scrollPhysics: PageScrollPhysics(),
           controller: controller,
-          validator: (value) {
+          validator: validator ?? (value) {
             if (validateLength == 0) return null;
             if (value == null) return "Invalid input";
 
@@ -74,9 +69,8 @@ class OutlinedTextField extends StatelessWidget {
           obscureText: isObscure ?? false,
           onSaved: save,
           maxLines: maxLines ?? 1,
-          enabled: initialValue != null ? false : true,
           maxLength: maxLength,
-          keyboardType: keyboard,
+          keyboardType: textInputType,
           initialValue: initialValue,
           decoration: InputDecoration(
               border: OutlineInputBorder(),

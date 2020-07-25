@@ -16,7 +16,7 @@ class ForumsProvider with ChangeNotifier {
   parseForumQuestions(var decodedJson) {
     compute(ForumQuestion.parseAsMap, decodedJson["forums"])
         .then((Map<String, ForumQuestion> value) {
-      print(value);
+      //print(value);
       _forumQuestions.addAll(value);
       notifyListeners();
     });

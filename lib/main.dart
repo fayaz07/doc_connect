@@ -1,9 +1,9 @@
 import 'package:doc_connect/services/app_data.dart';
+import 'package:doc_connect/services/chat.dart';
 import 'package:doc_connect/services/forums.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/views/intro_screens/intro_screen_view_model.dart';
 import 'package:doc_connect/views/splash_screen/splash_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -33,6 +33,9 @@ void main() async {
           ChangeNotifierProvider(
             create: (context) => ForumsProvider(),
           ),
+          ChangeNotifierProvider(
+            create: (context) => ChatService(context),
+          ),
         ],
         child: DocConnectApp(),
       ),
@@ -48,29 +51,9 @@ void _setupLogging() {
   });
 }
 
-// ignore: must_be_immutable
 class DocConnectApp extends StatelessWidget {
-
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-    }
-
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification'];
-    }
-
-    // Or do other work.
-  }
-
   @override
   Widget build(BuildContext context) {
-    fetchToken();
-
 //    final appData = Provider.of<AppData>(context);
 //    appData.isDarkTheme =
 //        MediaQuery.of(context).platformBrightness == Brightness.dark
@@ -90,31 +73,5 @@ class DocConnectApp extends StatelessWidget {
 //        theme: CupertinoThemeData(),
           ),
     );
-  }
-
-  bool fetched = false;
-
-  Future<void> fetchToken() async {
-    if (!fetched) {
-      fetched = true;
-      print(await _firebaseMessaging.getToken());
-
-
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-//        _showItemDialog(message);
-        },
-        onBackgroundMessage: myBackgroundMessageHandler,
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-//        _navigateToItemDetail(message);
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
-//        _navigateToItemDetail(message);
-        },
-      );
-    }
   }
 }

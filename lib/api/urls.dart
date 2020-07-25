@@ -1,9 +1,9 @@
 class Urls {
 //  static const String baseURL = "http://10.0.2.2:3000/api/v1/";
 
-  static const String baseURL = "http://192.168.43.170:3000/api/v1/";
+  // static const String baseURL = "http://192.168.43.170:3000/api/v1/";
 
-//  static const String baseURL = "https://doc-connect-v1.herokuapp.com/api/v1/";
+  static const String baseURL = "https://doc-connect-v1.herokuapp.com/api/v1/";
 
   static get host => baseURL.replaceAll("api/v1/", "");
 
@@ -12,6 +12,7 @@ class Urls {
   static const String fbAuth = "auth/fb";
   static const String googleAuth = "auth/google";
   static const String login = "auth/login";
+  static const String fcmId = "auth/fcm/token";
 
   /// Refresh token
   static const String token = "auth/token";
