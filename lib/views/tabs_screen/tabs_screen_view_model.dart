@@ -1,5 +1,7 @@
+import 'package:doc_connect/views/appointment/appointment.dart';
 import 'package:doc_connect/views/chat/chats_list.dart';
 import 'package:doc_connect/views/home/home.dart';
+import 'package:doc_connect/views/notification/notifications.dart';
 import 'package:flutter/cupertino.dart';
 
 class TabsScreenViewModel extends ChangeNotifier {
@@ -7,7 +9,12 @@ class TabsScreenViewModel extends ChangeNotifier {
   int _currentScreenIndex = 0;
   Widget _currentScreen = HomeScreen();
 
-  final _screens = [HomeScreen(), ChatsList(), ChatsList()];
+  final _screens = [
+    HomeScreen(),
+    AppointmentsScreen(),
+    NotificationsScreen(),
+    ChatsList()
+  ];
 
 //  instantiate(BuildContext context) {
 //    _context = context;

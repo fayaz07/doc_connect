@@ -1,6 +1,8 @@
 import 'package:doc_connect/services/app_data.dart';
+import 'package:doc_connect/services/appointments.dart';
 import 'package:doc_connect/services/chat.dart';
 import 'package:doc_connect/services/forums.dart';
+import 'package:doc_connect/services/notifications.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/views/intro_screens/intro_screen_view_model.dart';
 import 'package:doc_connect/views/splash_screen/splash_screen.dart';
@@ -35,6 +37,12 @@ void main() async {
           ),
           ChangeNotifierProvider(
             create: (context) => ChatService(context),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => NotificationService(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => AppointmentService(),
           ),
         ],
         child: DocConnectApp(),

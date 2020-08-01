@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+final messageFieldFN = FocusNode(debugLabel: 'chat-screen-tf');
+
 class ChatScreenViewModel extends ChangeNotifier {
   final scrollController = ScrollController(keepScrollOffset: true);
   final TextEditingController textEditingController = TextEditingController();
@@ -157,5 +159,17 @@ class ChatScreenViewModel extends ChangeNotifier {
   set receivedOldMessages(bool value) {
     _receivedOldMessages = value;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+//    if (FocusScope.of(_context).focusedChild == messageFieldFN) {
+//      FocusScope.of(_context).requestFocus(FocusNode());
+//      print("has focus");
+//      return Future.value(false);
+//    }
+    super.dispose();
+    _chatSocket.close();
+//    return Future.value(true);
   }
 }

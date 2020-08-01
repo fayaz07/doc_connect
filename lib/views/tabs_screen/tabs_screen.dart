@@ -1,3 +1,4 @@
+import 'package:doc_connect/utils/colors.dart';
 import 'package:doc_connect/views/tabs_screen/tabs_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -14,9 +15,14 @@ class TabsScreen extends StatelessWidget {
         bottomNavBar: PlatformNavBar(
           currentIndex: model.currentScreenIndex,
           itemChanged: model.screenChanged,
+          material: (context, target) => MaterialNavBarData(
+              selectedItemColor: AppColors.green,
+              unselectedItemColor: Colors.grey),
           items: [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home), title: Text('Home')),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assignment_ind), title: Text('Appointments')),
             BottomNavigationBarItem(
                 icon: Icon(Icons.notifications), title: Text('Notifications')),
             BottomNavigationBarItem(

@@ -42,34 +42,36 @@ class GuestProfile extends StatelessWidget {
               color: Colors.black,
             ),
             onPressed: model.pop,
-              ),
-            ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    getDPAndBaseDetails(guestUser),
-                    SizedBox(height: 8.0),
-                    guestUser.isDoctor
-                        ? _getCallAndChatOptions(model, guestUser, context)
-                        : _getOfferAppointmentOption(model, guestUser, context),
-                    SizedBox(height: 16.0),
-                    TitleText(title: 'Other details'),
-                    Divider(thickness: 1.5),
-                    _getProfessionalDetails(model, guestUser)
-                  ],
-                ),
-              ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                getDPAndBaseDetails(guestUser),
+                SizedBox(height: 8.0),
+                guestUser.isDoctor
+                    ? _getCallAndChatOptions(model, guestUser, context)
+                    : SizedBox(),
+                SizedBox(height: 16.0),
+                _getOfferAppointmentOption(model, guestUser, context),
+                SizedBox(height: 16.0),
+                TitleText(title: 'Other details'),
+                Divider(thickness: 1.5),
+                _getProfessionalDetails(model, guestUser)
+              ],
             ),
           ),
+        ),
+      ),
     );
   }
 
   Widget _getProfessionalDetails(GuestProfileViewModel model, User guestUser) {
     List<Widget> details = [];
-    if (guestUser.profession.checkNull())
+    if (!guestUser.profession.isNull())
       details.add(
         ListTile(
           title: Text('Profession'),
@@ -77,7 +79,7 @@ class GuestProfile extends StatelessWidget {
         ),
       );
 
-    if (guestUser.website.checkNull())
+    if (!guestUser.website.isNull())
       details.add(
         ListTile(
           title: Text('Website'),
@@ -86,7 +88,7 @@ class GuestProfile extends StatelessWidget {
       );
 
     if (guestUser.isDoctor) {
-      if (guestUser.speciality.checkNull())
+      if (!guestUser.speciality.isNull())
         details.add(
           ListTile(
             title: Text('Speciality'),
@@ -94,7 +96,7 @@ class GuestProfile extends StatelessWidget {
           ),
         );
     } else {
-      if (guestUser.symptoms.checkNull())
+      if (!guestUser.symptoms.isNull())
         details.add(
           ListTile(
             title: Text('Symptoms'),
@@ -103,7 +105,7 @@ class GuestProfile extends StatelessWidget {
         );
     }
 
-    if (guestUser.location.checkNull())
+    if (!guestUser.location.isNull())
       details.add(
         ListTile(
           title: Text('Location'),
@@ -117,17 +119,14 @@ class GuestProfile extends StatelessWidget {
     );
   }
 
-  Widget _getCallAndChatOptions(GuestProfileViewModel model, User user,
-      BuildContext context) {
+  Widget _getCallAndChatOptions(
+      GuestProfileViewModel model, User guestUser, BuildContext context) {
     return Row(
       children: <Widget>[
         RaisedButton(
-          color: user.availableForChat ? Colors.green : Colors.red,
+          color: guestUser.availableForChat ? Colors.green : Colors.red,
           child: SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.35,
+            width: MediaQuery.of(context).size.width * 0.35,
             height: 40.0,
             child: Center(
               child: Row(
@@ -160,7 +159,7 @@ class GuestProfile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
           ),
           elevation: 8.0,
-          color: !user.availableForCall ? Colors.green : Colors.red,
+          color: !guestUser.availableForCall ? Colors.green : Colors.red,
           child: SizedBox(
             width: MediaQuery
                 .of(context)
@@ -190,7 +189,7 @@ class GuestProfile extends StatelessWidget {
     );
   }
 
-  Widget _getOfferAppointmentOption(GuestProfileViewModel model, User user,
+  Widget _getOfferAppointmentOption(GuestProfileViewModel model, User guestUser,
       BuildContext context) {
     return RaisedButton(
       color: Colors.lightBlue,
@@ -202,7 +201,7 @@ class GuestProfile extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                'Offer appointment',
+                '${guestUser.isDoctor ? "Request" : "Offer"} appointment',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -212,7 +211,7 @@ class GuestProfile extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: () {},
+      onPressed: () => model.offerOrApplyForAppointment(guestUser),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
