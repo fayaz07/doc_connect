@@ -23,7 +23,7 @@ class ChatService with ChangeNotifier {
       final response = await APIService.api.getChats();
       if (response.isSuccessful) {
         final currUserId =
-            Provider.of<UsersProvider>(context, listen: false).user.id;
+            Provider.of<UsersService>(context, listen: false).user.id;
         final _parsedMap =
             Chat.parseAsMap(json.decode(response.body)["chats"], currUserId);
         _chats.addAll(_parsedMap);

@@ -5,9 +5,7 @@ import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/chat.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
-import 'package:doc_connect/utils/toast.dart';
 import 'package:doc_connect/views/appointment/new_appointment.dart';
-import 'package:doc_connect/views/appointment/new_appointment_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +36,7 @@ class GuestProfileViewModel extends ChangeNotifier {
     final Response response =
         await APIService.api.createORGetChatRoomId(jsonEncode({
       "users": [
-        Provider.of<UsersProvider>(_context, listen: false).user.id,
+        Provider.of<UsersService>(_context, listen: false).user.id,
         user.id
       ]
     }));

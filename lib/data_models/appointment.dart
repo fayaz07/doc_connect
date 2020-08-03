@@ -11,6 +11,7 @@ class Appointment {
   String problem;
   String preMedicalReport;
   ChatUser endUser;
+  bool cancelledByDoctor, cancelledByPatient;
 
   Appointment(
       {this.id,
@@ -25,24 +26,30 @@ class Appointment {
       this.problemDescription,
       this.problem,
       this.preMedicalReport,
-      this.endUser});
+      this.endUser,
+      this.cancelledByDoctor = false,
+      this.cancelledByPatient = false});
 
   static Appointment fromJSON(var map) {
     return Appointment(
-      id: map["_id"],
-      patient: map["patient"],
-      doctor: map["doctor"],
-      requestAccepted: map["request_accepted"] ?? false,
-      requestRejected: map["request_rejected"] ?? false,
-      offered: map["offered"] ?? false,
-      offerAccepted: map["offer_accepted"] ?? false,
-      offerRejected: map["offer_rejected"] ?? false,
-      scheduledDate: map["scheduled_date"],
-      problemDescription: map["problem_description"],
-      problem: map["problem"],
-      preMedicalReport: map["pre_medical_report"],
-      endUser: map["eu"] != null ? ChatUser.fromJSON(map["eu"][0]) : ChatUser(),
-    );
+        id: map["_id"],
+        patient: map["patient"],
+        doctor: map["doctor"],
+        requestAccepted: map["request_accepted"] ?? false,
+        requestRejected: map["request_rejected"] ?? false,
+        offered: map["offered"] ?? false,
+        offerAccepted: map["offer_accepted"] ?? false,
+        offerRejected: map["offer_rejected"] ?? false,
+        scheduledDate: map["scheduled_date"] != null
+            ? DateTime.parse(map["scheduled_date"])
+            : null,
+        problemDescription: map["problem_description"],
+        problem: map["problem"],
+        preMedicalReport: map["pre_medical_report"],
+        endUser:
+        map["eu"] != null ? ChatUser.fromJSON(map["eu"][0]) : ChatUser(),
+        cancelledByDoctor: map["doc_cancelled"] ?? false,
+        cancelledByPatient: map["patient_cancelled"] ?? false);
   }
 
   static List<Appointment> parseList(String jsonResponse) {

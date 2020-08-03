@@ -15,7 +15,7 @@ class PatientWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final patient = Provider.of<UsersProvider>(context).patients[patientId];
+    final patient = Provider.of<UsersService>(context).patients[patientId];
 
     return InkWell(
       onTap: () {

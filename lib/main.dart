@@ -2,6 +2,7 @@ import 'package:doc_connect/services/app_data.dart';
 import 'package:doc_connect/services/appointments.dart';
 import 'package:doc_connect/services/chat.dart';
 import 'package:doc_connect/services/forums.dart';
+import 'package:doc_connect/services/medical_reports.dart';
 import 'package:doc_connect/services/notifications.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/views/intro_screens/intro_screen_view_model.dart';
@@ -30,7 +31,7 @@ void main() async {
             create: (context) => AppData(),
           ),
           ChangeNotifierProvider(
-            create: (context) => UsersProvider(),
+            create: (context) => UsersService(),
           ),
           ChangeNotifierProvider(
             create: (context) => ForumsProvider(),
@@ -40,6 +41,9 @@ void main() async {
           ),
           ChangeNotifierProvider(
             create: (context) => NotificationService(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => MedicalReportService(),
           ),
           ChangeNotifierProvider(
             create: (context) => AppointmentService(),

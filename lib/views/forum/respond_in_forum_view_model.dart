@@ -27,7 +27,7 @@ class RespondInForumViewModel extends ChangeNotifier {
 
     _response.forumId = forumId;
 
-    final user = Provider.of<UsersProvider>(_context, listen: false).user;
+    final user = Provider.of<UsersService>(_context, listen: false).user;
 
     _response.author = Author(
       isDoctor: user.isDoctor,

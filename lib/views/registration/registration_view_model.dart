@@ -65,7 +65,7 @@ class RegistrationViewModel extends ChangeNotifier {
     if (oAuthResponse.success) {
       _updateFCMId();
       // todo: fetch nearby doctors/patients
-      Provider.of<UsersProvider>(_context, listen: false).user =
+      Provider.of<UsersService>(_context, listen: false).user =
           oAuthResponse.user;
       AuthService.parseHeadersAndStoreAuthData(
           response, oAuthResponse.user.isDoctor);

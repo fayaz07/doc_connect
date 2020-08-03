@@ -42,7 +42,7 @@ class LoginSignUpViewModel extends ChangeNotifier {
     if (response.isSuccessful) {
       final decodedJson = json.decode(response.body);
       final user = User.fromJSON(decodedJson["user"]);
-      Provider.of<UsersProvider>(_context, listen: false)
+      Provider.of<UsersService>(_context, listen: false)
           .parseUserDocPatientsData(decodedJson);
       ForumViewModel()..fetchForums(_context);
       _updateFCMId();

@@ -30,7 +30,7 @@ class ProfileViewModel extends ChangeNotifier {
     }
     showLoader(isModal: true);
     formKey.currentState.save();
-    Provider.of<UsersProvider>(_context, listen: false).user.gender =
+    Provider.of<UsersService>(_context, listen: false).user.gender =
         _getGender();
     _saveDetails();
   }
@@ -38,7 +38,9 @@ class ProfileViewModel extends ChangeNotifier {
   Future<void> _saveDetails() async {
     final Response response = await APIService.api.updateUserDetails(
       jsonEncode(User.toJSON(
-          Provider.of<UsersProvider>(_context, listen: false).user)),
+          Provider
+              .of<UsersService>(_context, listen: false)
+              .user)),
     );
     hideLoader();
     if (response.isSuccessful) {
@@ -47,7 +49,7 @@ class ProfileViewModel extends ChangeNotifier {
       final Response response = await APIService.api.getDashboard();
       if (response.isSuccessful) {
         final decodedJson = json.decode(response.body);
-        Provider.of<UsersProvider>(_context, listen: false)
+        Provider.of<UsersService>(_context, listen: false)
             .parseUserDocPatientsData(decodedJson);
         return;
       } else {
@@ -102,16 +104,25 @@ class ProfileViewModel extends ChangeNotifier {
     }
     hideLoader();
     _locationData = await _location.getLocation();
-    Provider.of<UsersProvider>(_context, listen: false).user.latitude =
+    Provider
+        .of<UsersService>(_context, listen: false)
+        .user
+        .latitude =
         _locationData.latitude;
-    Provider.of<UsersProvider>(_context, listen: false).user.latitude =
+    Provider
+        .of<UsersService>(_context, listen: false)
+        .user
+        .latitude =
         _locationData.longitude;
     notifyListeners();
   }
 
   selectDoctor(bool isDoctor) async {
     showLoader(isModal: true);
-    Provider.of<UsersProvider>(_context, listen: false).user.isDoctor =
+    Provider
+        .of<UsersService>(_context, listen: false)
+        .user
+        .isDoctor =
         isDoctor;
     final Response response = await APIService.api
         .updateUserType(jsonEncode({"is_doctor": isDoctor}));
@@ -141,12 +152,17 @@ class ProfileViewModel extends ChangeNotifier {
     Navigator.of(_context).pop();
   }
 
-  User get user => _context != null
-      ? Provider.of<UsersProvider>(_context, listen: false).user
-      : User();
+  User get user =>
+      _context != null
+          ? Provider
+          .of<UsersService>(_context, listen: false)
+          .user
+          : User();
 
   set user(User user) {
-    Provider.of<UsersProvider>(_context, listen: false).user = user;
+    Provider
+        .of<UsersService>(_context, listen: false)
+        .user = user;
   }
 
   /// getters and setters

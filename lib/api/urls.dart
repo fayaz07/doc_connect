@@ -1,7 +1,7 @@
 class Urls {
-  static const String baseURL = "http://10.0.2.2:3000/api/v1/";
+//  static const String baseURL = "http://10.0.2.2:3000/api/v1/";
 
-//  static const String baseURL = "http://192.168.43.170:3000/api/v1/";
+  static const String baseURL = "http://192.168.43.170:3000/api/v1/";
 
 //  static const String baseURL = "https://doc-connect-v1.herokuapp.com/api/v1/";
 
@@ -45,8 +45,12 @@ class Urls {
 
   ///---------------------- Appointment ----------------------------------------
   static const String appointment = "appointment";
-  static const String acceptAppointment = "appointment/accept";
-  static const String rejectAppointment = "appointment/reject";
+  static const String cancelAppointment = "appointment/cancel";
+  static const String acceptAppointmentReqOff = "appointment/accept";
+  static const String rejectAppointmentReqOff = "appointment/reject";
+
+  ///----------------------- Medical report ------------------------------------
+  static const String medicalReport = "mr";
 
   ///---------------------- notifications --------------------------------------
   static const String notifications = "notification";

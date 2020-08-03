@@ -136,9 +136,7 @@ class NearbyDoctors extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nearByDoctors =
-    Provider
-        .of<UsersProvider>(context)
-        .doctors
+    Provider.of<UsersService>(context).doctors
         .keys
         .toList();
     return SizedBox(
@@ -169,7 +167,7 @@ class NearbyPatients extends StatelessWidget {
   Widget build(BuildContext context) {
     final nearByPatients =
     Provider
-        .of<UsersProvider>(context)
+        .of<UsersService>(context)
         .patients
         .keys
         .toList();

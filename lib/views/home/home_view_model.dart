@@ -27,7 +27,7 @@ class HomeScreenViewModel extends ChangeNotifier {
   }
 
   User get user =>
-      _context == null ? User() : Provider.of<UsersProvider>(_context).user;
+      _context == null ? User() : Provider.of<UsersService>(_context).user;
 
   int get currentScreenIndex => _currentScreenIndex;
 

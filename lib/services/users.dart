@@ -1,11 +1,11 @@
-import 'package:doc_connect/data_models/fitness.dart';
+import 'package:doc_connect/data_models/medical_report.dart';
 import 'package:doc_connect/data_models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-class UsersProvider with ChangeNotifier {
+class UsersService with ChangeNotifier {
   User _user = User();
-  Fitness _fitness = Fitness();
+  MedicalReport _fitness = MedicalReport();
 
   parseUserDocPatientsData(var decodedJson) {
     _user = User.fromJSON(decodedJson["user"]);
@@ -51,9 +51,9 @@ class UsersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Fitness get fitness => _fitness;
+  MedicalReport get fitness => _fitness;
 
-  set fitness(Fitness value) {
+  set fitness(MedicalReport value) {
     _fitness = value;
     notifyListeners();
   }

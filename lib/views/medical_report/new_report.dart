@@ -1,32 +1,26 @@
-import 'package:doc_connect/data_models/fitness.dart';
-import 'package:doc_connect/services/users.dart';
+import 'package:doc_connect/data_models/medical_report.dart';
 import 'package:doc_connect/utils/assets.dart';
-import 'package:doc_connect/views/fitness/fitness_view_model.dart';
+import 'package:doc_connect/views/medical_report/new_report_view_model.dart';
 import 'package:doc_connect/widgets/buttons.dart';
 import 'package:doc_connect/widgets/text_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
-void main() => runApp(
-      ChangeNotifierProvider(
-        create: (context) => UsersProvider(),
-        child: PlatformApp(
-          home: FitnessScreen(),
-        ),
-      ),
-    );
+class NewMedicalReport extends StatelessWidget {
+  final String appointmentId;
 
-class FitnessScreen extends StatelessWidget {
+  const NewMedicalReport({Key key, this.appointmentId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return ViewModelBuilder<FitnessViewModel>.reactive(
-      viewModelBuilder: () => FitnessViewModel(),
-      onModelReady: (m) => m.init(context),
-      builder: (BuildContext context, FitnessViewModel model, Widget child) =>
+    return ViewModelBuilder<NewMedicalReportViewModel>.reactive(
+      viewModelBuilder: () => NewMedicalReportViewModel(),
+      onModelReady: (m) => m.init(context, appointmentId),
+      builder: (BuildContext context, NewMedicalReportViewModel model,
+              Widget child) =>
           PlatformScaffold(
         backgroundColor: Colors.white,
         appBar: PlatformAppBar(
@@ -71,11 +65,12 @@ class FitnessScreen extends StatelessWidget {
             )
           ],
         ),
-      ),
+          ),
     );
   }
 
-  List<Widget> _getChildren(FitnessViewModel model, BuildContext context) {
+  List<Widget> _getChildren(NewMedicalReportViewModel model,
+      BuildContext context) {
     return <Widget>[
       // Height & Weight details
       PageBuilder(
@@ -94,9 +89,9 @@ class FitnessScreen extends StatelessWidget {
                 OutlinedTextField(
                   label: 'Height',
                   suffix: Text('cms'),
-                  initialValue: model.fFitness.height?.toString(),
+                  initialValue: model.report.height?.toString(),
                   onChange: (String height) {
-                    model.fFitness.height = double.parse(height);
+                    model.report.height = double.parse(height);
                     model.notifyFFitness();
                   },
                   textInputType: TextInputType.number,
@@ -111,16 +106,16 @@ class FitnessScreen extends StatelessWidget {
                     return "Invalid height";
                   },
                   save: (String height) {
-                    model.fFitness.height = double.parse(height);
+                    model.report.height = double.parse(height);
                   },
                 ),
                 OutlinedTextField(
                   label: 'Weight',
                   suffix: Text('kgs'),
-                  initialValue: model.fFitness.weight?.toString(),
+                  initialValue: model.report.weight?.toString(),
                   textInputType: TextInputType.number,
                   onChange: (String weight) {
-                    model.fFitness.weight = double.parse(weight);
+                    model.report.weight = double.parse(weight);
                     model.notifyFFitness();
                   },
                   validator: (String weight) {
@@ -134,11 +129,11 @@ class FitnessScreen extends StatelessWidget {
                     return "Invalid weight";
                   },
                   save: (String weight) {
-                    model.fFitness.weight = double.parse(weight);
+                    model.report.weight = double.parse(weight);
                   },
                 ),
                 Text(
-                  'Your BMI is: ${getBMI(model.fFitness)} kg/m²',
+                  'Your BMI is: ${getBMI(model.report)} kg/m²',
                   style: TextStyle(fontSize: 18.0),
                 ),
                 SizedBox(height: 64.0)
@@ -165,7 +160,7 @@ class FitnessScreen extends StatelessWidget {
                   (index) => Selectable(
                     text: BloodGroup.values[index].buttonText(),
                     selected:
-                        model.fFitness.bloodGroup == BloodGroup.values[index],
+                    model.report.bloodGroup == BloodGroup.values[index],
                     onPressed: () {
                       model.selectBloodGroup(BloodGroup.values[index]);
                       model.notifyFFitness();
@@ -194,75 +189,75 @@ class FitnessScreen extends StatelessWidget {
           children: <Widget>[
             SelectableColorOrText(
               color: Colors.red,
-              selected: model.fFitness.csRed,
+              selected: model.report.csRed,
               onPressed: () {
-                model.fFitness.csRed = !model.fFitness.csRed;
+                model.report.csRed = !model.report.csRed;
                 model.notifyFFitness();
               },
             ),
             SelectableColorOrText(
               color: Colors.blue,
-              selected: model.fFitness.csBlue,
+              selected: model.report.csBlue,
               onPressed: () {
-                model.fFitness.csBlue = !model.fFitness.csBlue;
+                model.report.csBlue = !model.report.csBlue;
                 model.notifyFFitness();
               },
             ),
             SelectableColorOrText(
               color: Colors.green,
-              selected: model.fFitness.csGreen,
+              selected: model.report.csGreen,
               onPressed: () {
-                model.fFitness.csGreen = !model.fFitness.csGreen;
+                model.report.csGreen = !model.report.csGreen;
                 model.notifyFFitness();
               },
             ),
             SelectableColorOrText(
-              selected: model.fFitness.cs24,
+              selected: model.report.cs24,
               text: 'Check',
               fontSize: 24.0,
               fontWeight: FontWeight.normal,
               onPressed: () {
-                model.fFitness.cs24 = !model.fFitness.cs24;
+                model.report.cs24 = !model.report.cs24;
                 model.notifyFFitness();
               },
             ),
             SelectableColorOrText(
-              selected: model.fFitness.cs20,
+              selected: model.report.cs20,
               text: 'Check',
               fontSize: 20.0,
               fontWeight: FontWeight.normal,
               onPressed: () {
-                model.fFitness.cs20 = !model.fFitness.cs20;
+                model.report.cs20 = !model.report.cs20;
                 model.notifyFFitness();
               },
             ),
             SelectableColorOrText(
-              selected: model.fFitness.cs16,
+              selected: model.report.cs16,
               text: 'Check',
               fontSize: 16.0,
               fontWeight: FontWeight.normal,
               onPressed: () {
-                model.fFitness.cs16 = !model.fFitness.cs16;
+                model.report.cs16 = !model.report.cs16;
                 model.notifyFFitness();
               },
             ),
             SelectableColorOrText(
-              selected: model.fFitness.cs12,
+              selected: model.report.cs12,
               text: 'Check',
               fontSize: 12.0,
               fontWeight: FontWeight.normal,
               onPressed: () {
-                model.fFitness.cs12 = !model.fFitness.cs12;
+                model.report.cs12 = !model.report.cs12;
                 model.notifyFFitness();
               },
             ),
             SelectableColorOrText(
-              selected: model.fFitness.cs8,
+              selected: model.report.cs8,
               text: 'Check',
               fontSize: 8.0,
               fontWeight: FontWeight.normal,
               onPressed: () {
-                model.fFitness.cs8 = !model.fFitness.cs8;
+                model.report.cs8 = !model.report.cs8;
                 model.notifyFFitness();
               },
             ),
@@ -271,9 +266,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you use spectacles?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.spectacles,
+              value: model.report.spectacles,
               onChanged: (bool selected) {
-                model.fFitness.spectacles = selected;
+                model.report.spectacles = selected;
                 model.notifyFFitness();
               },
             ),
@@ -282,9 +277,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you have any other vision defect?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.visionDefect,
+              value: model.report.visionDefect,
               onChanged: (bool selected) {
-                model.fFitness.visionDefect = selected;
+                model.report.visionDefect = selected;
                 model.notifyFFitness();
               },
             ),
@@ -311,9 +306,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you have any hearing issues?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.hearingIssues,
+              value: model.report.hearingIssues,
               onChanged: (bool selected) {
-                model.fFitness.hearingIssues = selected;
+                model.report.hearingIssues = selected;
                 model.notifyFFitness();
               },
             ),
@@ -322,9 +317,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you use any hearing aid?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.hearingAids,
+              value: model.report.hearingAids,
               onChanged: (bool selected) {
-                model.fFitness.hearingAids = selected;
+                model.report.hearingAids = selected;
                 model.notifyFFitness();
               },
             ),
@@ -352,9 +347,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you have any physical disability?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.physicalDisability,
+              value: model.report.physicalDisability,
               onChanged: (bool selected) {
-                model.fFitness.physicalDisability = selected;
+                model.report.physicalDisability = selected;
                 model.notifyFFitness();
               },
             ),
@@ -363,9 +358,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you use any mechanical assistance?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.mechanicalAssistance,
+              value: model.report.mechanicalAssistance,
               onChanged: (bool selected) {
-                model.fFitness.mechanicalAssistance = selected;
+                model.report.mechanicalAssistance = selected;
                 model.notifyFFitness();
               },
             ),
@@ -392,9 +387,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you have any congenital disorder?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.congenitalDisorder,
+              value: model.report.congenitalDisorder,
               onChanged: (bool selected) {
-                model.fFitness.congenitalDisorder = selected;
+                model.report.congenitalDisorder = selected;
                 model.notifyFFitness();
               },
             ),
@@ -422,9 +417,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you have any Psychological issues?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.psychiatricIssues,
+              value: model.report.psychiatricIssues,
               onChanged: (bool selected) {
-                model.fFitness.psychiatricIssues = selected;
+                model.report.psychiatricIssues = selected;
                 model.notifyFFitness();
               },
             ),
@@ -451,9 +446,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you had any Surgeries?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.hadSurgeries,
+              value: model.report.hadSurgeries,
               onChanged: (bool selected) {
-                model.fFitness.hadSurgeries = selected;
+                model.report.hadSurgeries = selected;
                 model.notifyFFitness();
               },
             ),
@@ -480,9 +475,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you smoke?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.smoke,
+              value: model.report.smoke,
               onChanged: (bool selected) {
-                model.fFitness.smoke = selected;
+                model.report.smoke = selected;
                 model.notifyFFitness();
               },
             ),
@@ -491,9 +486,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you consume alcohol?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.alcohol,
+              value: model.report.alcohol,
               onChanged: (bool selected) {
-                model.fFitness.alcohol = selected;
+                model.report.alcohol = selected;
                 model.notifyFFitness();
               },
             ),
@@ -520,9 +515,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you suffer from diabetes?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.sugar,
+              value: model.report.sugar,
               onChanged: (bool selected) {
-                model.fFitness.sugar = selected;
+                model.report.sugar = selected;
                 model.notifyFFitness();
               },
             ),
@@ -531,9 +526,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you suffer from Blood Pressure?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.bp,
+              value: model.report.bp,
               onChanged: (bool selected) {
-                model.fFitness.bp = selected;
+                model.report.bp = selected;
                 model.notifyFFitness();
               },
             ),
@@ -542,9 +537,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you suffer from Cancer?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.cancer,
+              value: model.report.cancer,
               onChanged: (bool selected) {
-                model.fFitness.cancer = selected;
+                model.report.cancer = selected;
                 model.notifyFFitness();
               },
             ),
@@ -553,9 +548,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you suffer from Heart diseases?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.heartDiseases,
+              value: model.report.heartDiseases,
               onChanged: (bool selected) {
-                model.fFitness.heartDiseases = selected;
+                model.report.heartDiseases = selected;
                 model.notifyFFitness();
               },
             ),
@@ -564,9 +559,9 @@ class FitnessScreen extends StatelessWidget {
                 'Do you suffer from any Tumours?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               ),
-              value: model.fFitness.tumour,
+              value: model.report.tumour,
               onChanged: (bool selected) {
-                model.fFitness.tumour = selected;
+                model.report.tumour = selected;
                 model.notifyFFitness();
               },
             ),
@@ -576,7 +571,7 @@ class FitnessScreen extends StatelessWidget {
     ];
   }
 
-  String getBMI(Fitness fitness) {
+  String getBMI(MedicalReport fitness) {
     double height = fitness.height ?? 0.0;
     double weight = fitness.weight ?? 0.0;
 //    print((height/100)*(height/100));

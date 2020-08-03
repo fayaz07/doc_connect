@@ -202,7 +202,23 @@ class _$DocConnectAPI extends DocConnectAPI {
   }
 
   @override
-  Future<Response<dynamic>> acceptAppointment(dynamic body) {
+  Future<Response<dynamic>> updateAppointment(dynamic body) {
+    final $url = 'appointment';
+    final $body = body;
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> cancelAppointment(dynamic body) {
+    final $url = 'appointment';
+    final $body = body;
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> acceptAppointmentReqOff(dynamic body) {
     final $url = 'appointment/accept';
     final $body = body;
     final $request = Request('PATCH', $url, client.baseUrl, body: $body);
@@ -210,7 +226,7 @@ class _$DocConnectAPI extends DocConnectAPI {
   }
 
   @override
-  Future<Response<dynamic>> rejectAppointment(dynamic body) {
+  Future<Response<dynamic>> rejectAppointmentReqOff(dynamic body) {
     final $url = 'appointment/reject';
     final $body = body;
     final $request = Request('PATCH', $url, client.baseUrl, body: $body);
@@ -220,6 +236,21 @@ class _$DocConnectAPI extends DocConnectAPI {
   @override
   Future<Response<dynamic>> getNotifications() {
     final $url = 'notification';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> saveReport(dynamic body) {
+    final $url = 'mr';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> getReport(String id) {
+    final $url = 'mr/$id';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }

@@ -1,4 +1,4 @@
-import 'package:doc_connect/views/appointment/appointment.dart';
+import 'package:doc_connect/views/appointment/appointments.dart';
 import 'package:doc_connect/views/chat/chats_list.dart';
 import 'package:doc_connect/views/home/home.dart';
 import 'package:doc_connect/views/notification/notifications.dart';

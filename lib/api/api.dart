@@ -88,15 +88,28 @@ abstract class DocConnectAPI extends ChopperService {
   @Get(path: Urls.appointment)
   Future<Response<dynamic>> getAppointments();
 
-  @Patch(path: Urls.acceptAppointment)
-  Future<Response<dynamic>> acceptAppointment(@body dynamic body);
+  @Patch(path: Urls.appointment)
+  Future<Response<dynamic>> updateAppointment(@body dynamic body);
 
-  @Patch(path: Urls.rejectAppointment)
-  Future<Response<dynamic>> rejectAppointment(@body dynamic body);
+  @Patch(path: Urls.appointment)
+  Future<Response<dynamic>> cancelAppointment(@body dynamic body);
+
+  @Patch(path: Urls.acceptAppointmentReqOff)
+  Future<Response<dynamic>> acceptAppointmentReqOff(@body dynamic body);
+
+  @Patch(path: Urls.rejectAppointmentReqOff)
+  Future<Response<dynamic>> rejectAppointmentReqOff(@body dynamic body);
 
   /// notification
   @Get(path: Urls.notifications)
   Future<Response<dynamic>> getNotifications();
+
+  /// medical report
+  @Post(path: Urls.medicalReport)
+  Future<Response<dynamic>> saveReport(@body dynamic body);
+
+  @Get(path: Urls.medicalReport + "/{id}")
+  Future<Response<dynamic>> getReport(@Path() String id);
 
   static DocConnectAPI create() {
     final client = ChopperClient(

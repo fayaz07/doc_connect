@@ -40,7 +40,7 @@ class SplashScreenViewModel extends ChangeNotifier {
         if (response.isSuccessful) {
           AuthService.parseAndStoreHeaders(response);
           final decodedJson = json.decode(response.body);
-          Provider.of<UsersProvider>(_context, listen: false)
+          Provider.of<UsersService>(_context, listen: false)
               .parseUserDocPatientsData(decodedJson);
           Provider.of<ForumsProvider>(_context, listen: false)
               .parseForumQuestions(decodedJson);

@@ -19,7 +19,7 @@ class GuestProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final usersProvider = Provider.of<UsersProvider>(context);
+    final usersProvider = Provider.of<UsersService>(context);
 
     final guestUser = isDoctor
         ? usersProvider.doctors[userId]

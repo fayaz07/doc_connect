@@ -147,7 +147,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   User get user => _context == null
       ? User()
-      : Provider.of<UsersProvider>(_context, listen: false).user;
+      : Provider.of<UsersService>(_context, listen: false).user;
 
   List<Message> get messages => _context == null
       ? List<Message>()

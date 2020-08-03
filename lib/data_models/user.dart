@@ -23,6 +23,8 @@ class User {
 
   List<UserReview> reviews;
 
+  String preMedicalReportId;
+
   Map<dynamic, dynamic> additionalData;
 
   User({
@@ -51,6 +53,7 @@ class User {
     this.photoUrl,
     this.symptoms,
     this.additionalData,
+    this.preMedicalReportId,
   });
 
   static User fromJSON(var map) {
@@ -83,6 +86,7 @@ class User {
       popularity: double.parse(
           map['popularity'] != null ? map['popularity'].toString() : '0.0'),
       reviews: UserReview.fromJSONList(map['reviews']),
+      preMedicalReportId: map["medical_report"],
     );
   }
 

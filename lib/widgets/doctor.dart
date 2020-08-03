@@ -15,7 +15,7 @@ class DoctorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final doctor = Provider.of<UsersProvider>(context).doctors[doctorId];
+    final doctor = Provider.of<UsersService>(context).doctors[doctorId];
 
     return InkWell(
       onTap: () {
