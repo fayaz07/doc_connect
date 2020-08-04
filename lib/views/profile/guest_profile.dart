@@ -222,16 +222,17 @@ class GuestProfile extends StatelessWidget {
   Widget getDPAndBaseDetails(User user) {
     return Row(
       children: <Widget>[
-        Hero(
-          transitionOnUserGestures: true,
-          tag: 'pd-hero',
-          child: CircleAvatar(
+//        Hero(
+//          transitionOnUserGestures: true,
+//          tag: 'pd-hero',
+//          child:
+          CircleAvatar(
             radius: 40.0,
             backgroundImage: CachedNetworkImageProvider(
               user.photoUrl ?? Constants.defaultProfilePic,
             ),
           ),
-        ),
+//        ),
         SizedBox(width: 16.0),
         Expanded(
           child: Column(

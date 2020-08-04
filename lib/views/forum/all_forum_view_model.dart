@@ -5,7 +5,7 @@ import 'package:doc_connect/views/forum/ask_in_forum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-class ForumViewModel extends ChangeNotifier {
+class AllForumViewModel extends ChangeNotifier {
   BuildContext _context;
 
   init(BuildContext context) {
@@ -13,7 +13,7 @@ class ForumViewModel extends ChangeNotifier {
   }
 
   void fetchForums(BuildContext context) async{
-    Provider.of<ForumsProvider>(context, listen: false)
+    Provider.of<ForumsService>(context, listen: false)
         .fetchForums();
   }
 
@@ -27,9 +27,9 @@ class ForumViewModel extends ChangeNotifier {
 
   Map<String, ForumQuestion> get forumQuestions => _context == null
       ? Map<String, ForumQuestion>()
-      : Provider.of<ForumsProvider>(_context).forumQuestions;
+      : Provider.of<ForumsService>(_context).forumQuestions;
 
   Map<String, List<ForumMessage>> get forumMessages => _context == null
       ? Map<String, List<ForumMessage>>()
-      : Provider.of<ForumsProvider>(_context).forumResponses;
+      : Provider.of<ForumsService>(_context).forumResponses;
 }

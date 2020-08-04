@@ -35,10 +35,12 @@ class RespondInForumViewModel extends ChangeNotifier {
       gender: user.gender,
       profession: user.profession,
       speciality: user.speciality,
+      lastName: user.lastName,
+      firstName: user.firstName,
     );
 
     final bool success =
-        await Provider.of<ForumsProvider>(_context, listen: false)
+        await Provider.of<ForumsService>(_context, listen: false)
             .addResponse(_response);
     hideLoader();
     if (success) {

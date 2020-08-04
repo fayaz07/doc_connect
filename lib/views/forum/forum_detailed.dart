@@ -219,7 +219,7 @@ class ForumResponseWidget extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Text(
-                      'by: ${response.author.firstName} ${response.author.lastName}\n${response.author.profession} ${response.author.speciality}',
+                      'by: ${response.author.firstName} ${response.author.lastName}\n${response.author.profession ?? ""} ${response.author.speciality}',
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         color: Colors.black,

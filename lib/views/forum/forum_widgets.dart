@@ -12,7 +12,7 @@ class ForumQuestionTile extends StatelessWidget {
   const ForumQuestionTile({Key key, this.forumId, this.id}) : super(key: key);
 
   void forumDetailed(BuildContext context) {
-    Provider.of<ForumsProvider>(context, listen: false).fetchResponses(forumId);
+    Provider.of<ForumsService>(context, listen: false).fetchResponses(forumId);
     Navigator.of(context).push(
       AppNavigation.route(
         ForumDetailed(
@@ -24,12 +24,12 @@ class ForumQuestionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final forum = Provider.of<ForumsProvider>(context).forumQuestions[forumId];
+    final forum = Provider.of<ForumsService>(context).forumQuestions[forumId];
     return InkWell(
       borderRadius: BorderRadius.circular(8.0),
       onTap: () => forumDetailed(context),
       child: Container(
-        width: 230.0,
+        width: 240.0,
         decoration: BoxDecoration(
           color: AppColors.cardColors[16 % id],
           borderRadius: BorderRadius.circular(8.0),
@@ -85,16 +85,27 @@ class ForumQuestionWidget extends StatelessWidget {
 
   const ForumQuestionWidget({Key key, this.forumId, this.id}) : super(key: key);
 
+  void forumDetailed(BuildContext context) {
+    Provider.of<ForumsService>(context, listen: false).fetchResponses(forumId);
+    Navigator.of(context).push(
+      AppNavigation.route(
+        ForumDetailed(
+          forumQuestionId: forumId,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final forum = Provider.of<ForumsProvider>(context).forumQuestions[forumId];
+    final forum = Provider.of<ForumsService>(context).forumQuestions[forumId];
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      margin: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+      margin: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 4.0),
       color: AppColors.cardColors[28 % id],
       child: InkWell(
         borderRadius: BorderRadius.circular(4.0),
-        onTap: () {},
+        onTap: () => forumDetailed(context),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(

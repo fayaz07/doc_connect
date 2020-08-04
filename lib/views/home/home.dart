@@ -74,13 +74,13 @@ class HomeScreen extends StatelessWidget {
           Spacer(),
           InkWell(
             onTap: model.goToProfileScreen,
-            child: Hero(
-              tag: 'user-profile',
-              child: GetAvatar(
-                firstName: model.user.firstName,
-                photoUrl: model.user.photoUrl,
-              ),
+//            child: Hero(
+//              tag: 'user-profile',
+            child: GetAvatar(
+              firstName: model.user.firstName,
+              photoUrl: model.user.photoUrl,
             ),
+//            ),
           )
         ],
       );
@@ -136,20 +136,17 @@ class NearbyDoctors extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nearByDoctors =
-    Provider.of<UsersService>(context).doctors
-        .keys
-        .toList();
+        Provider.of<UsersService>(context).doctors.keys.toList();
     return SizedBox(
       height: 150.0,
       child: nearByDoctors.length == 0
           ? Center(
-        child: Text('No doctors here'),
-      )
+              child: Text('No doctors here'),
+            )
           : ListView.builder(
-        itemCount: nearByDoctors.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, i) =>
-            DoctorWidget(
+              itemCount: nearByDoctors.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, i) => DoctorWidget(
                 i: i,
                 doctorId: nearByDoctors[i],
               ),
@@ -166,22 +163,17 @@ class NearbyPatients extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nearByPatients =
-    Provider
-        .of<UsersService>(context)
-        .patients
-        .keys
-        .toList();
+        Provider.of<UsersService>(context).patients.keys.toList();
     return SizedBox(
       height: 150.0,
       child: nearByPatients.length == 0
           ? Center(
-        child: Text('No patients here'),
-      )
+              child: Text('No patients here'),
+            )
           : ListView.builder(
-        itemCount: nearByPatients.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, i) =>
-            PatientWidget(
+              itemCount: nearByPatients.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, i) => PatientWidget(
                 i: i,
                 patientId: nearByPatients[i],
               ),
@@ -198,16 +190,17 @@ class TopForums extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final forumQuestions =
-        Provider.of<ForumsProvider>(context).forumQuestions.keys.toList();
+        Provider.of<ForumsService>(context).forumQuestions.keys.toList();
     return SizedBox(
-      height: 120.0,
+      height: 130.0,
       child: ListView.builder(
-          itemCount: forumQuestions.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, i) => ForumQuestionTile(
-                id: i + 1,
-                forumId: forumQuestions[i].toString(),
-              )),
+        itemCount: forumQuestions.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, i) => ForumQuestionTile(
+          id: i + 1,
+          forumId: forumQuestions[i].toString(),
+        ),
+      ),
     );
   }
 }

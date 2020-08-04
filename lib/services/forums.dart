@@ -1,13 +1,13 @@
 import 'dart:convert';
-
 import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/forum.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+//import 'package:dartx/dartx.dart';
 
-class ForumsProvider with ChangeNotifier {
+class ForumsService with ChangeNotifier {
   Map<String, ForumQuestion> _forumQuestions = Map();
   Map<String, List<ForumMessage>> _forumResponses = Map();
 
@@ -20,6 +20,11 @@ class ForumsProvider with ChangeNotifier {
       _forumQuestions.addAll(value);
       notifyListeners();
     });
+  }
+
+  addForum(ForumQuestion forumQuestion) {
+    _forumQuestions[forumQuestion.id] = forumQuestion;
+    notifyListeners();
   }
 
   Future<void> fetchResponses(String forumId) async {
@@ -72,6 +77,7 @@ class ForumsProvider with ChangeNotifier {
   }
 
   Future<bool> addResponse(ForumMessage message) async {
+    print("Message dude $message");
     final response =
         await APIService.api.respond(jsonEncode(ForumMessage.toJSON(message)));
     if (response.isSuccessful) {

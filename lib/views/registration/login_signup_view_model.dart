@@ -6,7 +6,7 @@ import 'package:doc_connect/services/fcm.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
-import 'package:doc_connect/views/forum/forum_view_model.dart';
+import 'package:doc_connect/views/forum/all_forum_view_model.dart';
 import 'package:doc_connect/views/profile/select_user_type.dart';
 import 'package:doc_connect/views/registration/registration_screen.dart';
 import 'package:doc_connect/views/tabs_screen/tabs_screen.dart';
@@ -44,7 +44,7 @@ class LoginSignUpViewModel extends ChangeNotifier {
       final user = User.fromJSON(decodedJson["user"]);
       Provider.of<UsersService>(_context, listen: false)
           .parseUserDocPatientsData(decodedJson);
-      ForumViewModel()..fetchForums(_context);
+      AllForumViewModel()..fetchForums(_context);
       _updateFCMId();
       if (user.firstName == null ||
           user.firstName.length == 0 ||

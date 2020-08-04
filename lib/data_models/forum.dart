@@ -29,7 +29,7 @@ class Author {
 
   @override
   String toString() {
-    return 'Author{gender: $gender, speciality: $speciality, profession: $profession, age: $age, isDoctor: $isDoctor}';
+    return 'Author{gender: $gender, speciality: $speciality, profession: $profession, age: $age, isDoctor: $isDoctor, firstName: $firstName, lastName: $lastName}';
   }
 }
 
@@ -66,7 +66,11 @@ class ForumQuestion {
     return ForumQuestion(
       id: map['_id'],
       authorId: map['authorId'],
-      author: Author.fromJSON(map["author"][0]),
+      author: map["author"] != null
+          ? map["author"][0] != null
+              ? Author.fromJSON(map["author"][0])
+              : Author()
+          : Author(),
       topic: map['topic'],
       title: map['title'],
       solutionId: map["solutionId"],

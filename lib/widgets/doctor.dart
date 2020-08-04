@@ -41,16 +41,17 @@ class DoctorWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Hero(
-              transitionOnUserGestures: true,
-              tag: 'pd-hero',
-              child: CircleAvatar(
-                radius: 25.0,
-                backgroundImage: CachedNetworkImageProvider(
-                  doctor.photoUrl ?? Constants.defaultProfilePic,
-                ),
+//            Hero(
+//              transitionOnUserGestures: true,
+//              tag: 'pd-hero',
+//              child:
+            CircleAvatar(
+              radius: 25.0,
+              backgroundImage: CachedNetworkImageProvider(
+                doctor.photoUrl ?? Constants.defaultProfilePic,
               ),
             ),
+//            ),
             SizedBox(height: 4.0),
             Row(
               children: <Widget>[

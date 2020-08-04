@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/forum.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/forums.dart';
+import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ots/ots.dart';
@@ -25,20 +25,33 @@ class AskInForumViewModel extends ChangeNotifier {
     }
     showLoader(isModal: true);
     askQuestionFormKey.currentState.save();
-    final Response response = await APIService.api
-        .askQuestionInForum(jsonEncode(ForumQuestion.toJSONForNewQuestion(question)));
+    final Response response = await APIService.api.askQuestionInForum(
+        jsonEncode(ForumQuestion.toJSONForNewQuestion(question)));
     hideLoader();
     if (response.isSuccessful) {
-      final newQuestion =
+      var newQuestion =
           ForumQuestion.fromJSON(json.decode(response.body)["forum"]);
-      Provider.of<ForumsProvider>(_context, listen: false)
-          .forumQuestions[newQuestion.id] = newQuestion;
+      final user = Provider.of<UsersService>(_context, listen: false).user;
+      newQuestion.author = Author(
+          firstName: user.firstName,
+          lastName: user.lastName,
+          speciality: user.speciality,
+          profession: user.profession,
+          gender: user.gender,
+          age: user.age,
+          isDoctor: user.isDoctor);
+      newQuestion.noOfViews = 0;
+      newQuestion.noOfDownVotes = 0;
+      newQuestion.noOfUpVotes = 0;
+//      Provider.of<ForumsService>(_context, listen: false)
+//          .forumQuestions[newQuestion.id] = newQuestion;
+      Provider.of<ForumsService>(_context, listen: false).addForum(newQuestion);
+
       pop();
     } else {
       AppToast.showError(response);
     }
   }
-
 
   void pop() {
     Navigator.of(_context).pop();

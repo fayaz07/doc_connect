@@ -1,15 +1,15 @@
-import 'package:doc_connect/views/forum/forum_view_model.dart';
+import 'package:doc_connect/views/forum/all_forum_view_model.dart';
 import 'package:doc_connect/views/forum/forum_widgets.dart';
 import 'package:doc_connect/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
 
-class Forums extends StatelessWidget {
+class AllForums extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ForumViewModel>.reactive(
-      viewModelBuilder: () => ForumViewModel(),
+    return ViewModelBuilder<AllForumViewModel>.reactive(
+      viewModelBuilder: () => AllForumViewModel(),
       onModelReady: (m) => m.init(context),
       builder: (context, model, child) => PlatformScaffold(
         backgroundColor: Colors.white,
@@ -41,7 +41,7 @@ class Forums extends StatelessWidget {
     );
   }
 
-  Widget _getForumQuestions(ForumViewModel model) {
+  Widget _getForumQuestions(AllForumViewModel model) {
     return ListView.builder(
       padding: const EdgeInsets.all(12.0),
       itemCount: model.forumQuestions.length,

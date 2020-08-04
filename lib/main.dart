@@ -34,7 +34,7 @@ void main() async {
             create: (context) => UsersService(),
           ),
           ChangeNotifierProvider(
-            create: (context) => ForumsProvider(),
+            create: (context) => ForumsService(),
           ),
           ChangeNotifierProvider(
             create: (context) => ChatService(context),

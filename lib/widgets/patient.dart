@@ -40,15 +40,16 @@ class PatientWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Hero(
-              tag: 'pd-hero',
-              child: CircleAvatar(
+//            Hero(
+//              tag: 'pd-hero',
+//              child:
+              CircleAvatar(
                 radius: 25.0,
                 backgroundImage: CachedNetworkImageProvider(
                   patient.photoUrl ?? Constants.defaultProfilePic,
                 ),
               ),
-            ),
+//            ),
             SizedBox(height: 4.0),
             Row(
               children: <Widget>[

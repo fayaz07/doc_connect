@@ -42,7 +42,7 @@ class SplashScreenViewModel extends ChangeNotifier {
           final decodedJson = json.decode(response.body);
           Provider.of<UsersService>(_context, listen: false)
               .parseUserDocPatientsData(decodedJson);
-          Provider.of<ForumsProvider>(_context, listen: false)
+          Provider.of<ForumsService>(_context, listen: false)
               .parseForumQuestions(decodedJson);
           _navigateToTabsScreen();
           return;

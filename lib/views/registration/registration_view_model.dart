@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/response/oauth.dart';
+import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/auth.dart';
 import 'package:doc_connect/services/fcm.dart';
+import 'package:doc_connect/services/forums.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
@@ -69,8 +71,21 @@ class RegistrationViewModel extends ChangeNotifier {
           oAuthResponse.user;
       AuthService.parseHeadersAndStoreAuthData(
           response, oAuthResponse.user.isDoctor);
-      Navigator.of(_context).pushReplacement(AppNavigation.route(
-          oAuthResponse.signup ? SelectUserType() : TabsScreen()));
+
+      final Response dashboardResponse = await APIService.api.getDashboard();
+      if (dashboardResponse.isSuccessful) {
+        AuthService.parseAndStoreHeaders(response);
+        final decodedJson = json.decode(response.body);
+        Provider.of<UsersService>(_context, listen: false)
+            .parseUserDocPatientsData(decodedJson);
+        Provider.of<ForumsService>(_context, listen: false)
+            .parseForumQuestions(decodedJson);
+        Navigator.of(_context).pushReplacement(AppNavigation.route(
+            oAuthResponse.signup ? SelectUserType() : TabsScreen()));
+        return;
+      } else {
+        AppToast.showError(response);
+      }
     } else {
       AppToast.showLong(text: oAuthResponse.message);
     }

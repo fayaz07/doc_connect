@@ -23,7 +23,7 @@ class HomeScreenViewModel extends ChangeNotifier {
   }
 
   void goToForums() {
-    Navigator.of(_context).push(AppNavigation.route(Forums()));
+    Navigator.of(_context).push(AppNavigation.route(AllForums()));
   }
 
   User get user =>
