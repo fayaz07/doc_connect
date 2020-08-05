@@ -3,8 +3,16 @@ class Constants {
   static const refreshToken = "refresh-token";
   static const userType = "user_type";
 
+  /// [Hive] [LocalDB]
   static const chatBox = "chats-hive";
   static const messagesBox = "messages-hive";
+  static const userBox = "user-hive";
+  static const patientBox = "patient-hive";
+  static const doctorBox = "doctor-hive";
+  static const tipsBox = "tip-hive";
+  static const medicalReportsBox = "medicalReports-hive";
+  static const forumsQuestionsBox = "forums-hive";
+  static const forumsAnswersBox = "forum-answers-hive";
 
   static const double fourBy1 = 4.0;
   static const double fourBy2 = 8.0;

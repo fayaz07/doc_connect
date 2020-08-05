@@ -9,6 +9,7 @@ import 'package:doc_connect/widgets/buttons.dart';
 import 'package:doc_connect/widgets/doctor.dart';
 import 'package:doc_connect/widgets/patient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,42 +20,44 @@ class HomeScreen extends StatelessWidget {
       viewModelBuilder: () => HomeScreenViewModel(),
       onModelReady: (m) => m.instantiate(context),
       builder: (context, model, child) => SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _getHeader(model),
-                SizedBox(height: 16.0),
-                TitleWithButton(
-                  title: 'Tips of the day',
-                  onPressed: () {
-                    print("Hello");
-                  },
-                ),
-                SizedBox(height: 8.0),
-                TipsCarousel(model: model),
-                SizedBox(height: 16.0),
-                TitleWithButton(
-                  title:
-                      'Nearby ${model.user.isDoctor ? "Patients" : "Doctors"}',
-                  onPressed: () {
-                    print("Hello");
-                  },
-                ),
-                SizedBox(height: 4.0),
-                model.user.isDoctor ? NearbyPatients() : NearbyDoctors(),
-                SizedBox(height: 8.0),
-                TitleWithButton(
-                  title: 'Forums',
-                  onPressed: model.goToForums,
-                ),
-                SizedBox(height: 4.0),
-                TopForums(),
-              ],
+        child: PlatformScaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _getHeader(model),
+                  SizedBox(height: 16.0),
+                  TitleWithButton(
+                    title: 'Tips of the day',
+                    onPressed: () {
+                      print("Hello");
+                    },
+                  ),
+                  SizedBox(height: 8.0),
+                  TipsCarousel(model: model),
+                  SizedBox(height: 16.0),
+                  TitleWithButton(
+                    title:
+                        'Nearby ${model.user.isDoctor ? "Patients" : "Doctors"}',
+                    onPressed: () {
+                      print("Hello");
+                    },
+                  ),
+                  SizedBox(height: 4.0),
+                  model.user.isDoctor ? NearbyPatients() : NearbyDoctors(),
+                  SizedBox(height: 8.0),
+                  TitleWithButton(
+                    title: 'Forums',
+                    onPressed: model.goToForums,
+                  ),
+                  SizedBox(height: 4.0),
+                  TopForums(),
+                ],
+              ),
             ),
           ),
         ),
@@ -95,7 +98,6 @@ class TipsCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tips = Provider.of<TipService>(context).tips;
-
     return CarouselSlider(
       options: CarouselOptions(
         height: 150.0,
@@ -107,9 +109,9 @@ class TipsCarousel extends StatelessWidget {
         (int i) => Card(
           elevation: 2.0,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          margin: EdgeInsets.symmetric(horizontal: 4.0),
-          color: Colors.accents[i % Colors.accents.length],
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+          color: Colors.accents[i % 15],
           child: SizedBox(
             width: double.infinity,
             child: Padding(
@@ -194,13 +196,18 @@ class TopForums extends StatelessWidget {
         Provider.of<ForumsService>(context).forumQuestions.keys.toList();
     return SizedBox(
       height: 130.0,
-      child: ListView.builder(
+      child: forumQuestions.length == 0
+          ? Center(
+        child: Text('No forums here'),
+      )
+          : ListView.builder(
         itemCount: forumQuestions.length,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, i) => ForumQuestionTile(
-          id: i + 1,
-          forumId: forumQuestions[i].toString(),
-        ),
+        itemBuilder: (context, i) =>
+            ForumQuestionTile(
+              id: i + 1,
+              forumId: forumQuestions[i].toString(),
+            ),
       ),
     );
   }

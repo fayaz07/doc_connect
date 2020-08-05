@@ -2,28 +2,60 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/forum.dart';
 import 'package:doc_connect/services/api.dart';
+import 'package:doc_connect/services/local_db.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 //import 'package:dartx/dartx.dart';
 
 class ForumsService with ChangeNotifier {
-  Map<String, ForumQuestion> _forumQuestions = Map();
-  Map<String, List<ForumMessage>> _forumResponses = Map();
+  static Map<String, ForumQuestion> _forumQuestions = Map();
+  static Map<String, List<ForumMessage>> _forumResponses = Map();
 
-  bool _loading = false;
+  static bool _loading = false;
 
-  parseForumQuestions(var decodedJson) {
+  void pullFromLocalDb() {
+    if (LocalDB.forumQuestionsBox.length > 0) {
+      LocalDB.forumQuestionsBox.keys.forEach((key) {
+        _forumQuestions[key] =
+            LocalDB.forumQuestionsBox.get(key, defaultValue: ForumQuestion());
+      });
+    }
+
+    if (LocalDB.forumAnswersBox.length > 0) {
+      LocalDB.forumAnswersBox.keys.forEach((key) {
+        _forumResponses[key] = LocalDB.forumAnswersBox
+            .get(key, defaultValue: List<ForumMessage>());
+      });
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> _addForumQuestionToLocalDB(ForumQuestion forumQuestion) async {
+    await LocalDB.forumQuestionsBox.put(forumQuestion.id, forumQuestion);
+  }
+
+  Future<void> _addForumAnswerToLocalDB(
+      String qid, List<ForumMessage> forumMessages) async {
+    await LocalDB.forumAnswersBox.put(qid, forumMessages);
+  }
+
+  void parseForumQuestions(var decodedJson) {
     compute(ForumQuestion.parseAsMap, decodedJson["forums"])
         .then((Map<String, ForumQuestion> value) {
       //print(value);
       _forumQuestions.addAll(value);
       notifyListeners();
+      _forumQuestions.forEach((key, value) {
+        _addForumQuestionToLocalDB(value);
+      });
     });
   }
 
-  addForum(ForumQuestion forumQuestion) {
+  void addForum(ForumQuestion forumQuestion) {
     _forumQuestions[forumQuestion.id] = forumQuestion;
+    _addForumQuestionToLocalDB(forumQuestion);
     notifyListeners();
   }
 
@@ -36,6 +68,7 @@ class ForumsService with ChangeNotifier {
               json.decode(response.body)["responses"])
           .then((List<ForumMessage> value) {
         _forumResponses[forumId] = value;
+        _addForumAnswerToLocalDB(forumId, value);
         _loading = false;
         notifyListeners();
       });
@@ -44,27 +77,6 @@ class ForumsService with ChangeNotifier {
       notifyListeners();
       AppToast.showError(response);
     }
-  }
-
-  Map<String, ForumQuestion> get forumQuestions => _forumQuestions;
-
-  set forumQuestions(Map<String, ForumQuestion> value) {
-    _forumQuestions = value;
-    notifyListeners();
-  }
-
-  Map<String, List<ForumMessage>> get forumResponses => _forumResponses;
-
-  set forumResponses(Map<String, List<ForumMessage>> value) {
-    _forumResponses = value;
-    notifyListeners();
-  }
-
-  bool get loading => _loading;
-
-  set loading(bool value) {
-    _loading = value;
-    notifyListeners();
   }
 
   Future<void> fetchForums() async {
@@ -77,13 +89,13 @@ class ForumsService with ChangeNotifier {
   }
 
   Future<bool> addResponse(ForumMessage message) async {
-    print("Message dude $message");
+//    print("Message dude $message");
     final response =
         await APIService.api.respond(jsonEncode(ForumMessage.toJSON(message)));
     if (response.isSuccessful) {
       List<ForumMessage> messages = _forumResponses[message.forumId];
       final sentResponse =
-          ForumMessage.selfFromJSON(json.decode(response.body)["sent_message"]);
+      ForumMessage.selfFromJSON(json.decode(response.body)["sent_message"]);
       message.id = sentResponse.id;
       if (messages == null) {
         messages = [message];
@@ -91,6 +103,7 @@ class ForumsService with ChangeNotifier {
         messages.add(message);
       }
       _forumResponses[message.forumId] = messages;
+      _addForumAnswerToLocalDB(message.forumId, messages);
       notifyListeners();
     } else {
       AppToast.showError(response);
@@ -153,5 +166,27 @@ class ForumsService with ChangeNotifier {
     } else {
       AppToast.showError(response);
     }
+  }
+
+  ///-------------------------- Getters and setters ---------------------------
+  Map<String, ForumQuestion> get forumQuestions => _forumQuestions;
+
+  set forumQuestions(Map<String, ForumQuestion> value) {
+    _forumQuestions = value;
+    notifyListeners();
+  }
+
+  Map<String, List<ForumMessage>> get forumResponses => _forumResponses;
+
+  set forumResponses(Map<String, List<ForumMessage>> value) {
+    _forumResponses = value;
+    notifyListeners();
+  }
+
+  bool get loading => _loading;
+
+  set loading(bool value) {
+    _loading = value;
+    notifyListeners();
   }
 }

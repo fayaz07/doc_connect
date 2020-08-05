@@ -35,7 +35,7 @@ class ChatService with ChangeNotifier {
       _chats[element] = LocalDB.chatsBox.get(element);
     });
 
-    print(_chats);
+//    print(_chats);
 
 //    debugPrint(LocalDB.messagesBox.keys.length.toString());
     LocalDB.messagesBox.keys.forEach((key) {
@@ -43,7 +43,7 @@ class ChatService with ChangeNotifier {
           LocalDB.messagesBox.get(key, defaultValue: <Message>[]));
     });
 
-    print(_messages);
+//    print(_messages);
     notifyListeners();
     return;
   }

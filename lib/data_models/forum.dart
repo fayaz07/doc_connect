@@ -1,48 +1,57 @@
-class Author {
-  String gender, speciality, profession;
-  int age;
-  bool isDoctor;
-  String firstName, lastName;
+import 'package:doc_connect/data_models/author.dart';
+import 'package:hive/hive.dart';
 
-  Author(
-      {this.gender,
-      this.firstName,
-      this.lastName,
-      this.speciality,
-      this.profession,
-      this.age,
-      this.isDoctor});
+part 'forum.g.dart';
 
-  factory Author.fromJSON(var map) {
-    return map == null
-        ? Author()
-        : Author(
-            firstName: map["first_name"],
-            lastName: map["last_name"],
-            age: int.parse(map["age"].toString()) ?? 0,
-            isDoctor: map["is_doctor"] ?? false,
-            gender: map["gender"],
-            speciality: map["speciality"],
-            profession: map["profession"],
-          );
-  }
-
-  @override
-  String toString() {
-    return 'Author{gender: $gender, speciality: $speciality, profession: $profession, age: $age, isDoctor: $isDoctor, firstName: $firstName, lastName: $lastName}';
-  }
-}
-
+@HiveType(typeId: 5)
 class ForumQuestion {
-  String id, authorId, topic, title, question;
+  @HiveField(1)
+  String id;
+
+  @HiveField(2)
+  String authorId;
+
+  @HiveField(3)
+  String topic;
+
+  @HiveField(4)
+  String title;
+
+  @HiveField(5)
+  String question;
+
+  @HiveField(6)
   List views;
-  DateTime askedOn;
+
+  @HiveField(7)
+  DateTime createdAt;
+
+  @HiveField(8)
   bool solved;
+
+  @HiveField(9)
   String solutionId;
-  List upVotes, downVotes;
+
+  @HiveField(10)
+  List upVotes;
+
+  @HiveField(11)
+  List downVotes;
+
+  @HiveField(12)
   List<ForumMessage> messages;
+
+  @HiveField(13)
   Author author;
-  int noOfViews, noOfUpVotes, noOfDownVotes;
+
+  @HiveField(14)
+  int noOfViews;
+
+  @HiveField(15)
+  int noOfUpVotes;
+
+  @HiveField(16)
+  int noOfDownVotes;
 
   ForumQuestion(
       {this.id,
@@ -51,7 +60,7 @@ class ForumQuestion {
       this.title,
       this.question,
       this.views,
-      this.askedOn,
+      this.createdAt,
       this.solved,
       this.solutionId,
       this.upVotes,
@@ -68,15 +77,15 @@ class ForumQuestion {
       authorId: map['authorId'],
       author: map["author"] != null
           ? map["author"][0] != null
-              ? Author.fromJSON(map["author"][0])
-              : Author()
+          ? Author.fromJSON(map["author"][0])
+          : Author()
           : Author(),
       topic: map['topic'],
       title: map['title'],
       solutionId: map["solutionId"],
       question: map['question'],
       views: map['views'] ?? [],
-      askedOn: DateTime.parse(map['askedOn']),
+      createdAt: DateTime.parse(map['createdAt']),
       solved: map['solved'],
       messages: map['messages'] ?? [],
       upVotes: map['upVotes'] ?? [],
@@ -95,7 +104,7 @@ class ForumQuestion {
       "title": forumQuestion.title,
       "question": forumQuestion.question,
       "views": forumQuestion.views,
-      "askedOn": forumQuestion.askedOn,
+      "createdAt": forumQuestion.createdAt,
       "solved": forumQuestion.solved,
       "messages": forumQuestion.messages,
       "upVotes": forumQuestion.upVotes,
@@ -113,6 +122,7 @@ class ForumQuestion {
 
   static Map<String, ForumQuestion> parseAsMap(var jsonList) {
     Map<String, ForumQuestion> _forumQuestions = Map();
+    if (jsonList == null) return _forumQuestions;
     for (var c in jsonList) {
       final q = ForumQuestion.fromJSON(c);
       _forumQuestions[q.id] = q;
@@ -122,10 +132,11 @@ class ForumQuestion {
 
   @override
   String toString() {
-    return 'Forum{ authorId: $authorId, topic: $topic, title: $title, question: $question, views: $views, askedOn: $askedOn, solved: $solved, messages: $messages}';
+    return 'Forum{ authorId: $authorId, topic: $topic, title: $title, question: $question, views: $views, askedOn: $createdAt, solved: $solved, messages: $messages}';
   }
 }
 
+@HiveType(typeId: 6)
 class ForumMessage {
   String id;
   String forumId, authorId;
@@ -134,16 +145,15 @@ class ForumMessage {
   List upVotes, downVotes;
   Author author;
 
-  ForumMessage(
-      {this.id,
-      this.forumId,
-      this.authorId,
-      this.author,
-      this.answer,
-      this.tips,
-      this.upVotes,
-      this.downVotes,
-      this.answeredOn});
+  ForumMessage({this.id,
+    this.forumId,
+    this.authorId,
+    this.author,
+    this.answer,
+    this.tips,
+    this.upVotes,
+    this.downVotes,
+    this.answeredOn});
 
   factory ForumMessage.fromJSON(var map) {
     return ForumMessage(
@@ -157,7 +167,7 @@ class ForumMessage {
       tips: map['tips'],
       upVotes: map['upVotes'] ?? [],
       downVotes: map['downVotes'] ?? [],
-      answeredOn: DateTime.parse(map['answeredOn']),
+      answeredOn: DateTime.parse(map['createdAt']),
     );
   }
 
@@ -169,7 +179,7 @@ class ForumMessage {
       tips: map['tips'],
       upVotes: map['upVotes'] ?? [],
       downVotes: map['downVotes'] ?? [],
-      answeredOn: DateTime.parse(map['answeredOn']),
+      answeredOn: DateTime.parse(map['createdAt']),
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:doc_connect/data_models/author.dart';
 import 'package:doc_connect/data_models/forum.dart';
 import 'package:doc_connect/services/forums.dart';
 import 'package:doc_connect/services/users.dart';
@@ -40,8 +41,8 @@ class RespondInForumViewModel extends ChangeNotifier {
     );
 
     final bool success =
-        await Provider.of<ForumsService>(_context, listen: false)
-            .addResponse(_response);
+    await Provider.of<ForumsService>(_context, listen: false)
+        .addResponse(_response);
     hideLoader();
     if (success) {
       pop();

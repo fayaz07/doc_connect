@@ -3,11 +3,7 @@ import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/response/oauth.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/auth.dart';
-import 'package:doc_connect/services/chat.dart';
 import 'package:doc_connect/services/fcm.dart';
-import 'package:doc_connect/services/forums.dart';
-import 'package:doc_connect/services/local_db.dart';
-import 'package:doc_connect/services/tip.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
@@ -19,10 +15,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hive/hive.dart';
 import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 
 class RegistrationViewModel extends ChangeNotifier {
   BuildContext _context;
@@ -72,31 +66,41 @@ class RegistrationViewModel extends ChangeNotifier {
     if (oAuthResponse.success) {
       _updateFCMId();
       // todo: fetch nearby doctors/patients
-      Provider.of<UsersService>(_context, listen: false).user =
+      Provider
+          .of<UsersService>(_context, listen: false)
+          .user =
           oAuthResponse.user;
       AuthService.parseHeadersAndStoreAuthData(
           response, oAuthResponse.user.isDoctor);
 
-      final Response dashboardResponse = await APIService.api.getDashboard();
-      if (dashboardResponse.isSuccessful) {
-        AuthService.parseAndStoreHeaders(response);
-        final decodedJson = json.decode(response.body);
-        Provider.of<UsersService>(_context, listen: false)
-            .parseUserDocPatientsData(decodedJson);
-        Provider.of<ForumsService>(_context, listen: false)
-            .parseForumQuestions(decodedJson);
-        Provider.of<TipService>(_context, listen: false).parseTips(decodedJson);
+//      final Response dashboardResponse = await APIService.api.getDashboard();
+//      if (dashboardResponse.isSuccessful) {
+//        AuthService.parseAndStoreHeaders(response);
+//        final decodedJson = json.decode(response.body);
+//        Provider.of<UsersService>(_context, listen: false)
+//            .parseUserDocPatientsData(decodedJson);
+//        Provider.of<ForumsService>(_context, listen: false)
+//            .parseForumQuestions(decodedJson);
+//        Provider.of<TipService>(_context, listen: false).parseTips(decodedJson);
+//
+//        // init local db
+//        LocalDB()..init();
+//
+//        Navigator.of(_context).pushReplacement(AppNavigation.route(
+//            oAuthResponse.signup ? SelectUserType() : TabsScreen()));
+//
+//        return;
+//      } else {
+//        AppToast.showError(response);
+//      }
 
-        // init local db
-        LocalDB()..init();
-
-        Navigator.of(_context).pushReplacement(AppNavigation.route(
-            oAuthResponse.signup ? SelectUserType() : TabsScreen()));
-
-        return;
-      } else {
-        AppToast.showError(response);
-      }
+      APIService()
+        ..getDashboard(_context).then(
+              (value) {
+            Navigator.of(_context).pushReplacement(AppNavigation.route(
+                oAuthResponse.signup ? SelectUserType() : TabsScreen()));
+          },
+        ).catchError((error) => AppToast.show(text: "Can\'t fetch data"));
     } else {
       AppToast.showLong(text: oAuthResponse.message);
     }

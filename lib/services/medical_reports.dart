@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:doc_connect/data_models/medical_report.dart';
 import 'package:doc_connect/services/api.dart';
+import 'package:doc_connect/services/local_db.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 
 class MedicalReportService extends ChangeNotifier {
-  Map<String, MedicalReport> _medicalReports = Map();
+  static Map<String, MedicalReport> _medicalReports = Map();
 
   bool _loading = false;
   bool _hasError = false;
@@ -17,6 +18,7 @@ class MedicalReportService extends ChangeNotifier {
       if (response.isSuccessful) {
         MedicalReport medicalReport = MedicalReport.fromJSON(
             json.decode(response.body)["medical_report"]);
+        _addMedicalReportToLocalDB(medicalReport);
         _medicalReports[medicalReport.id] = medicalReport;
       } else {
         hasError = true;
@@ -28,6 +30,21 @@ class MedicalReportService extends ChangeNotifier {
     return true;
   }
 
+  void pullFromLocalDb() {
+    if (LocalDB.medicalReportsBox.length > 0) {
+      LocalDB.medicalReportsBox.keys.forEach((key) {
+        _medicalReports[key] =
+            LocalDB.medicalReportsBox.get(key, defaultValue: MedicalReport());
+      });
+      notifyListeners();
+    }
+  }
+
+  void _addMedicalReportToLocalDB(MedicalReport medicalReport) {
+    LocalDB.medicalReportsBox.put(medicalReport.id, medicalReport);
+  }
+
+  ///---------------------------- Getters and Setters --------------------------
   Map<String, MedicalReport> get medicalReports => _medicalReports;
 
   set medicalReports(Map<String, MedicalReport> value) {

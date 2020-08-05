@@ -36,21 +36,25 @@ class LoginSignUpViewModel extends ChangeNotifier {
   }
 
   void _login() async {
+    /// Todo: Something is fetching duplicate no. of times check it
     showLoader(isModal: true);
     final Response response =
         await AuthService.login(emailController.text, passwordController.text);
     hideLoader();
     if (response.isSuccessful) {
+//      LocalDB()..init();
+
       final decodedJson = json.decode(response.body);
       final user = User.fromJSON(decodedJson["user"]);
 
       Provider.of<UsersService>(_context, listen: false)
-          .parseUserDocPatientsData(decodedJson);
+          .parseUserDocPatients(decodedJson);
 
       Provider.of<TipService>(_context, listen: false).parseTips(decodedJson);
 
       AllForumViewModel()..fetchForums(_context);
       _updateFCMId();
+
       if (user.firstName == null ||
           user.firstName.length == 0 ||
           user.gender == null) {

@@ -1,37 +1,93 @@
 import 'package:doc_connect/data_models/user_review.dart';
+import 'package:hive/hive.dart';
 
+part 'user.g.dart';
+
+@HiveType(typeId: 10)
 class User {
-  String id, email, firstName, lastName, knownLanguages;
+  @HiveField(0)
+  String id;
 
+  @HiveField(1)
+  String email;
+
+  @HiveField(2)
+  String firstName;
+
+  @HiveField(3)
+  String lastName;
+
+  @HiveField(4)
+  String knownLanguages;
+
+  @HiveField(5)
   bool isDoctor;
+
+  @HiveField(6)
   bool availableForCall;
+
+  @HiveField(7)
   bool availableForChat;
 
-  String hospitalName, workplace;
+  @HiveField(8)
+  String hospitalName;
 
-  String photoUrl, symptoms;
+  @HiveField(9)
+  String workplace;
 
-  String availability, website, profession, gender, location;
-  double latitude, longitude;
+  @HiveField(10)
+  String photoUrl;
 
+  @HiveField(11)
+  String symptoms;
+
+  @HiveField(12)
+  String availability;
+
+  @HiveField(13)
+  String website;
+
+  @HiveField(14)
+  String profession;
+
+  @HiveField(15)
+  String gender;
+
+  @HiveField(16)
+  String location;
+
+  @HiveField(17)
+  double latitude;
+
+  @HiveField(18)
+  double longitude;
+
+  @HiveField(19)
   String speciality;
 
+  @HiveField(20)
   int age;
-  DateTime createdOn;
 
+  @HiveField(21)
+  DateTime createdAt;
+
+  @HiveField(22)
   double popularity;
 
+  @HiveField(23)
   List<UserReview> reviews;
 
+  @HiveField(24)
   String preMedicalReportId;
 
+  @HiveField(25)
   Map<dynamic, dynamic> additionalData;
 
   User({
     this.id,
     this.email,
     this.isDoctor = false,
-    this.createdOn,
+    this.createdAt,
     this.availability,
     this.availableForCall = false,
     this.availableForChat = false,
@@ -62,8 +118,8 @@ class User {
       lastName: map['last_name'],
       email: map['email'],
       id: map['user_id'],
-      createdOn: map['created_on'] != null
-          ? DateTime.parse(map['created_on'])
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'])
           : DateTime.now(),
       photoUrl: map['photo_url'],
       isDoctor: map['is_doctor'] ?? false,
@@ -120,6 +176,7 @@ class User {
 
   static Map<String, User> fromJSONList(var jsonList) {
     Map<String, User> users = Map();
+    if (jsonList == null) return users;
     for (var c in jsonList) {
       final u = User.fromJSON(c);
       users[u.id] = u;
@@ -137,7 +194,7 @@ class User {
         'availability: $availability, website: $website,'
         'profession: $profession, gender: $gender, location: $location, '
         'latitude: $latitude, longitude: $longitude, speciality: $speciality,'
-        'age: $age, createdOn: $createdOn, popularity: $popularity,'
+        'age: $age, createdOn: $createdAt, popularity: $popularity,'
         'reviews: $reviews, additionalData: $additionalData}';
   }
 }

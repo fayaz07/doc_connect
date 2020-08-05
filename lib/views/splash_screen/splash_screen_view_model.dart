@@ -1,19 +1,13 @@
-import 'dart:convert';
-import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/auth.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/auth.dart';
 import 'package:doc_connect/services/fcm.dart';
-import 'package:doc_connect/services/forums.dart';
 import 'package:doc_connect/services/local_db.dart';
-import 'package:doc_connect/services/tip.dart';
-import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:doc_connect/views/intro_screens/intro_screen.dart';
 import 'package:doc_connect/views/tabs_screen/tabs_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class SplashScreenViewModel extends ChangeNotifier {
   BuildContext _context;
@@ -27,39 +21,50 @@ class SplashScreenViewModel extends ChangeNotifier {
 
       Auth auth = await AuthService.getAuthData();
 
-      /// todo: locally handle token expiration and refreshing the token
-      /// fetching it on dashboard
+      LocalDB()
+        ..init().whenComplete(() {
+          /// todo: locally handle token expiration and refreshing the token
+          /// fetching it on dashboard
 
-      if (auth.authToken.length > 10 && auth.refreshToken.length > 10) {
-        /// logged in
-        debugPrint("User logged in");
+          /// todo: check if user details are filled and navigate to basic details setup screen
 
-        /// init FCM
-        FCMService.init();
+          if (auth.authToken.length > 10 && auth.refreshToken.length > 10) {
+            /// logged in
+            debugPrint("User logged in");
 
-        final Response response = await APIService.api.getDashboard();
-        if (response.isSuccessful) {
-          AuthService.parseAndStoreHeaders(response);
-          final decodedJson = json.decode(response.body);
-          Provider.of<UsersService>(_context, listen: false)
-              .parseUserDocPatientsData(decodedJson);
-          Provider.of<ForumsService>(_context, listen: false)
-              .parseForumQuestions(decodedJson);
-          Provider.of<TipService>(_context, listen: false)
-              .parseTips(decodedJson);
+            /// init FCM
+            FCMService.init();
 
-          LocalDB()..init();
+            APIService()
+              ..getDashboard(context)
+                  .then((value) => _navigateToTabsScreen())
+                  .catchError(
+                      (error) => AppToast.show(text: "Can\'t fetch data"));
 
-          _navigateToTabsScreen();
-          return;
-        } else {
-          AppToast.showError(response);
-        }
-      } else {
-        /// not logged in
-        debugPrint("User not logged in");
-        _navigateToIntroScreen();
-      }
+//        final Response response = await APIService.api.getDashboard();
+//        if (response.isSuccessful) {
+//          AuthService.parseAndStoreHeaders(response);
+//          final decodedJson = json.decode(response.body);
+//          Provider.of<UsersService>(_context, listen: false)
+//              .parseUserDocPatientsData(decodedJson);
+//          Provider.of<ForumsService>(_context, listen: false)
+//              .parseForumQuestions(decodedJson);
+//          Provider.of<TipService>(_context, listen: false)
+//              .parseTips(decodedJson);
+//
+//
+//
+//          _navigateToTabsScreen();
+//          return;
+//        } else {
+//          AppToast.showError(response);
+//        }
+          } else {
+            /// not logged in
+            debugPrint("User not logged in");
+            _navigateToIntroScreen();
+          }
+        });
     }
   }
 

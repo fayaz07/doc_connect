@@ -3,21 +3,15 @@ import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/user.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/auth.dart';
-import 'package:doc_connect/services/chat.dart';
-import 'package:doc_connect/services/forums.dart';
-import 'package:doc_connect/services/local_db.dart';
-import 'package:doc_connect/services/tip.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:doc_connect/views/home/home.dart';
 import 'package:doc_connect/views/profile/setup_profile_details.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:hive/hive.dart';
 import 'package:location/location.dart';
 import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 
 class ProfileViewModel extends ChangeNotifier {
   final Location _location = Location();
@@ -29,7 +23,7 @@ class ProfileViewModel extends ChangeNotifier {
     _context = context;
   }
 
-  void validateDetails() {
+  Future<void> validateDetails() async {
     if (!formKey.currentState.validate()) {
       AppToast.show(text: 'Please enter valid details');
       return;
@@ -38,39 +32,10 @@ class ProfileViewModel extends ChangeNotifier {
     formKey.currentState.save();
     Provider.of<UsersService>(_context, listen: false).user.gender =
         _getGender();
-    _saveDetails();
-  }
-
-  Future<void> _saveDetails() async {
-    final Response response = await APIService.api.updateUserDetails(
-      jsonEncode(User.toJSON(
-          Provider
-              .of<UsersService>(_context, listen: false)
-              .user)),
-    );
-    hideLoader();
-    if (response.isSuccessful) {
-      /// fetch nearby doctors and patients
-      /// todo: to be changed to fetch separate data
-
-      final Response dashboardResponse = await APIService.api.getDashboard();
-      if (dashboardResponse.isSuccessful) {
-        final decodedJson = json.decode(dashboardResponse.body);
-        Provider.of<UsersService>(_context, listen: false)
-            .parseUserDocPatientsData(decodedJson);
-        Provider.of<ForumsService>(_context, listen: false)
-            .parseForumQuestions(decodedJson);
-        Provider.of<TipService>(_context, listen: false).parseTips(decodedJson);
-
-        LocalDB()..init();
-        return;
-      } else {
-        AppToast.showError(dashboardResponse);
-      }
-      _navigateToHomeScreen();
-    } else {
-      AppToast.showLong(text: json.decode(response.error)["message"]);
-    }
+    UsersService()
+      ..saveDetails().whenComplete(() {
+        _navigateToHomeScreen();
+      });
   }
 
   String _getGender() {
@@ -134,8 +99,7 @@ class ProfileViewModel extends ChangeNotifier {
     Provider
         .of<UsersService>(_context, listen: false)
         .user
-        .isDoctor =
-        isDoctor;
+        .isDoctor = isDoctor;
     final Response response = await APIService.api
         .updateUserType(jsonEncode({"is_doctor": isDoctor}));
     hideLoader();

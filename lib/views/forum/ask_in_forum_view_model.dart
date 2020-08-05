@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:chopper/chopper.dart';
+import 'package:doc_connect/data_models/author.dart';
 import 'package:doc_connect/data_models/forum.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/forums.dart';

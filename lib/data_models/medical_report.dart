@@ -1,116 +1,193 @@
+import 'package:hive/hive.dart';
+
+part 'medical_report.g.dart';
+
+@HiveType(typeId: 8)
 class MedicalReport {
+  @HiveField(1)
   String id;
+
+  @HiveField(2)
   String userId;
 
   //  R at the end - Remarks
+  @HiveField(3)
   BloodGroup bloodGroup;
 
   // Vision
+  @HiveField(4)
   bool visionDefect;
+
+  @HiveField(5)
   bool spectacles;
+
+  @HiveField(6)
   String visionR;
 
   // primary colors
   // cs-canSee
+  @HiveField(7)
   bool csRed;
+
+  @HiveField(8)
   bool csBlue;
+
+  @HiveField(9)
   bool csGreen;
+
+  @HiveField(10)
   bool cs24;
+
+  @HiveField(11)
   bool cs20;
+
+  @HiveField(12)
   bool cs16;
+
+  @HiveField(13)
   bool cs12;
+
+  @HiveField(14)
   bool cs8;
+
+  @HiveField(15)
   String colorsR;
 
   // Hearing
+  @HiveField(16)
   bool hearingIssues;
+
+  @HiveField(17)
   bool hearingAids;
+
+  @HiveField(18)
   String hearingR;
 
   // Physical deformity
+
+  @HiveField(19)
   bool physicalDisability;
+
+  @HiveField(20)
   bool mechanicalAssistance;
+
+  @HiveField(21)
   String physicalDeformityRemarks;
 
   // By birth disease
+  @HiveField(22)
   bool congenitalDisorder;
+
+  @HiveField(23)
   String congenitalDisorderRemarks;
 
   // Psychiatric issues
+  @HiveField(24)
   bool psychiatricIssues;
+
+  @HiveField(25)
   String psychiatricRemarks;
 
   // illness or operation
+  @HiveField(26)
   bool hadSurgeries;
+
+  @HiveField(27)
   String operationRemarks;
 
   // alcohol
+  @HiveField(28)
   bool alcohol;
+
+  @HiveField(29)
   String alcoholRemarks;
 
   // smoke
+  @HiveField(30)
   bool smoke;
+
+  @HiveField(31)
   String smokeRemarks;
 
   // sugar
+  @HiveField(32)
   bool sugar;
+
+  @HiveField(33)
   int yearsSugar;
+
+  @HiveField(34)
   String sugarRemarks;
 
   // BP
+  @HiveField(35)
   bool bp;
+
+  @HiveField(36)
   String bpRemarks;
 
   // Cancer
+  @HiveField(37)
   bool cancer;
+
+  @HiveField(38)
   String cancerRemarks;
 
   // Heart
+  @HiveField(39)
   bool heartDiseases;
+
+  @HiveField(40)
   String heartRemarks;
 
   // Tumour
+  @HiveField(41)
   bool tumour;
+
+  @HiveField(42)
   String tumourRemarks;
 
   // in ms
+  @HiveField(43)
   double height;
 
   // in kgs
+  @HiveField(44)
   double weight;
 
   // weight(kg)/[height(in meters)]*[height(in meters)]
+  @HiveField(45)
   double bmi;
 
+  @HiveField(46)
   String otherIllness;
 
-  MedicalReport(
-      {this.id,
-      this.userId,
-      this.bloodGroup,
-      this.visionR,
-      this.csRed = false,
-      this.csBlue = false,
-      this.csGreen = false,
-      this.cs24 = false,
-      this.cs20 = false,
-      this.cs16 = false,
-      this.cs12 = false,
-      this.cs8 = false,
-      this.colorsR,
-      this.hearingIssues = false,
-      this.hearingAids = false,
-      this.hearingR,
-      this.physicalDisability = false,
-      this.mechanicalAssistance = false,
-      this.physicalDeformityRemarks,
-      this.congenitalDisorder = false,
-      this.congenitalDisorderRemarks,
-      this.psychiatricIssues = false,
-      this.psychiatricRemarks,
-      this.hadSurgeries = false,
-      this.operationRemarks,
-      this.sugar = false,
+  MedicalReport({this.id,
+    this.userId,
+    this.bloodGroup,
+    this.visionR,
+    this.csRed = false,
+    this.csBlue = false,
+    this.csGreen = false,
+    this.cs24 = false,
+    this.cs20 = false,
+    this.cs16 = false,
+    this.cs12 = false,
+    this.cs8 = false,
+    this.colorsR,
+    this.hearingIssues = false,
+    this.hearingAids = false,
+    this.hearingR,
+    this.physicalDisability = false,
+    this.mechanicalAssistance = false,
+    this.physicalDeformityRemarks,
+    this.congenitalDisorder = false,
+    this.congenitalDisorderRemarks,
+    this.psychiatricIssues = false,
+    this.psychiatricRemarks,
+    this.hadSurgeries = false,
+    this.operationRemarks,
+    this.sugar = false,
       this.yearsSugar,
       this.sugarRemarks,
       this.bp = false,
@@ -121,16 +198,16 @@ class MedicalReport {
       this.tumourRemarks,
       this.alcohol = false,
       this.alcoholRemarks,
-    this.smoke = false,
-    this.smokeRemarks,
-    this.heartDiseases = false,
-    this.heartRemarks,
-    this.height,
-    this.weight,
-    this.bmi,
-    this.otherIllness,
-    this.spectacles = false,
-    this.visionDefect = false});
+      this.smoke = false,
+      this.smokeRemarks,
+      this.heartDiseases = false,
+      this.heartRemarks,
+      this.height,
+      this.weight,
+      this.bmi,
+      this.otherIllness,
+      this.spectacles = false,
+      this.visionDefect = false});
 
   static MedicalReport fromJSON(var map) {
     return MedicalReport(
