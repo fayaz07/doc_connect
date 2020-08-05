@@ -1,4 +1,5 @@
 import 'package:doc_connect/data_models/chat.dart';
+import 'package:doc_connect/data_models/message.dart';
 import 'package:doc_connect/utils/constants.dart';
 import 'package:doc_connect/views/chat/chat_screen_view_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
+//    print(widget.chat);
     return ViewModelBuilder<ChatScreenViewModel>.reactive(
       disposeViewModel: true,
       viewModelBuilder: () => ChatScreenViewModel(),
@@ -30,52 +32,57 @@ class _ChatScreenState extends State<ChatScreen> {
               Icons.arrow_back_ios,
               color: Colors.black,
             ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              elevation: 2.0,
-              title: Text(
-                '${widget.chat.users[0].firstName}',
-                style: TextStyle(color: Colors.black),
-              ),
-              centerTitle: true,
-            ),
-            body: Stack(
-              children: <Widget>[
-                !model.receivedOldMessages
-                    ? Center(
-                  child: CircularProgressIndicator(),
-                )
-                    : Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 64.0),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
-                    physics: ScrollPhysics(),
-                    key: Key('show-Messages'),
-                    controller: model.scrollController,
-                    itemCount: model.messages.length,
-                    itemBuilder: (context, i) => MessageBuilder(
-                        id: model.user.id,
-                        message: model.messages[i],
-                        url: widget.chat.users[0].photoUrl),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: MessageInput(
-                    onMessageFieldTap: model.onMessageFieldTap,
-                    sendMessage: model.sendMessage,
-                    textEditingController: model.textEditingController,
-                  ),
-                )
-              ],
-            ),
-//        bottomSheet: ,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
+          elevation: 2.0,
+          title: Text(
+            '${widget.chat.users[0].firstName}',
+            style: TextStyle(color: Colors.black),
+          ),
+          centerTitle: true,
+        ),
+        body: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: model.receivedOldMessages
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 64.0),
+                      child: ListView.builder(
+                        reverse: true,
+                        shrinkWrap: true,
+                        padding:
+                            const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
+                        physics: ScrollPhysics(),
+                        key: Key('show-Messages'),
+                        controller: model.scrollController,
+                        itemCount: model.messages.length,
+                        itemBuilder: (context, i) => MessageBuilder(
+                            id: model.user.id,
+                            message: model.messages[i],
+                            url: widget.chat.users[0].photoUrl),
+                      ),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    ),
+            ),
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+//              height: 50.0,
+              child: MessageInput(
+                onMessageFieldTap: model.onMessageFieldTap,
+                sendMessage: model.sendMessage,
+                textEditingController: model.textEditingController,
+              ),
+            )
+          ],
+        ),
+//        bottomSheet: ,
+      ),
     );
   }
 }
@@ -187,11 +194,14 @@ class IncomingText extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        padding: const EdgeInsets.symmetric(vertical: 1.5),
         child: ConstrainedBox(
           constraints: BoxConstraints(
               minWidth: 50.0,
-              maxWidth: MediaQuery.of(context).size.width * .75),
+              maxWidth: MediaQuery
+                  .of(context)
+                  .size
+                  .width * .75),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -267,13 +277,16 @@ class OutgoingText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 1.5),
       child: Align(
         alignment: Alignment.topRight,
         child: ConstrainedBox(
           constraints: BoxConstraints(
               minWidth: 50.0,
-              maxWidth: MediaQuery.of(context).size.width * .75),
+              maxWidth: MediaQuery
+                  .of(context)
+                  .size
+                  .width * .75),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

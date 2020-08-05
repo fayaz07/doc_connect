@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:doc_connect/data_models/appointment.dart';
-import 'package:doc_connect/data_models/chat.dart';
 import 'package:doc_connect/data_models/user.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/appointments.dart';
+import 'package:doc_connect/data_models/chat_user.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ots/ots.dart';

@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:doc_connect/data_models/chat.dart';
+import 'package:doc_connect/data_models/chat_user.dart';
 
 class Appointment {
   String id;

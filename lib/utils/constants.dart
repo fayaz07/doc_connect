@@ -3,6 +3,9 @@ class Constants {
   static const refreshToken = "refresh-token";
   static const userType = "user_type";
 
+  static const chatBox = "chats-hive";
+  static const messagesBox = "messages-hive";
+
   static const double fourBy1 = 4.0;
   static const double fourBy2 = 8.0;
   static const double fourBy3 = 12.0;

@@ -4,12 +4,14 @@ import 'package:doc_connect/services/chat.dart';
 import 'package:doc_connect/services/forums.dart';
 import 'package:doc_connect/services/medical_reports.dart';
 import 'package:doc_connect/services/notifications.dart';
+import 'package:doc_connect/services/tip.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/views/intro_screens/intro_screen_view_model.dart';
 import 'package:doc_connect/views/splash_screen/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
 import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +39,7 @@ void main() async {
             create: (context) => ForumsService(),
           ),
           ChangeNotifierProvider(
-            create: (context) => ChatService(context),
+            create: (context) => ChatService()..fetchChats(context),
           ),
           ChangeNotifierProvider(
             create: (context) => NotificationService(),
@@ -47,6 +49,9 @@ void main() async {
           ),
           ChangeNotifierProvider(
             create: (context) => AppointmentService(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => TipService(),
           ),
         ],
         child: DocConnectApp(),
@@ -63,7 +68,12 @@ void _setupLogging() {
   });
 }
 
-class DocConnectApp extends StatelessWidget {
+class DocConnectApp extends StatefulWidget {
+  @override
+  _DocConnectAppState createState() => _DocConnectAppState();
+}
+
+class _DocConnectAppState extends State<DocConnectApp> {
   @override
   Widget build(BuildContext context) {
 //    final appData = Provider.of<AppData>(context);
@@ -77,13 +87,21 @@ class DocConnectApp extends StatelessWidget {
       title: 'Doc Connect',
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
-      material: (context, platformTarget) => MaterialAppData(
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-      ),
-      cupertino: (context, platformTarget) => CupertinoAppData(
+      material: (context, platformTarget) =>
+          MaterialAppData(
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+          ),
+      cupertino: (context, platformTarget) =>
+          CupertinoAppData(
 //        theme: CupertinoThemeData(),
           ),
     );
+  }
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
   }
 }

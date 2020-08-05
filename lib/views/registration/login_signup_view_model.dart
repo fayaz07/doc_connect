@@ -3,6 +3,7 @@ import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/user.dart';
 import 'package:doc_connect/services/auth.dart';
 import 'package:doc_connect/services/fcm.dart';
+import 'package:doc_connect/services/tip.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
@@ -42,8 +43,12 @@ class LoginSignUpViewModel extends ChangeNotifier {
     if (response.isSuccessful) {
       final decodedJson = json.decode(response.body);
       final user = User.fromJSON(decodedJson["user"]);
+
       Provider.of<UsersService>(_context, listen: false)
           .parseUserDocPatientsData(decodedJson);
+
+      Provider.of<TipService>(_context, listen: false).parseTips(decodedJson);
+
       AllForumViewModel()..fetchForums(_context);
       _updateFCMId();
       if (user.firstName == null ||

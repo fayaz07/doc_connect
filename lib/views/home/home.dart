@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:doc_connect/services/forums.dart';
+import 'package:doc_connect/services/tip.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/views/forum/forum_widgets.dart';
 import 'package:doc_connect/views/home/home_view_model.dart';
@@ -93,37 +94,37 @@ class TipsCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tips = Provider.of<TipService>(context).tips;
+
     return CarouselSlider(
       options: CarouselOptions(
         height: 150.0,
         autoPlay: true,
         autoPlayInterval: Duration(seconds: 4),
       ),
-      items: [1, 2, 3, 4, 5].map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Card(
-              elevation: 2.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0)),
-              margin: EdgeInsets.symmetric(horizontal: 4.0),
-              color: Colors.accents[Colors.accents.length % i],
-              child: SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      'Tip $i',
-                      style: TextStyle(fontSize: 24.0, color: Colors.white),
-                    ),
-                  ),
+      items: List.generate(
+        tips.length,
+        (int i) => Card(
+          elevation: 2.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          margin: EdgeInsets.symmetric(horizontal: 4.0),
+          color: Colors.accents[i % Colors.accents.length],
+          child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                  '${tips[i].tip}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18.0, color: Colors.white),
                 ),
               ),
-            );
-          },
-        );
-      }).toList(),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

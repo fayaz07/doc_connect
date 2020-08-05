@@ -1,11 +1,12 @@
 import 'dart:convert';
-
 import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/auth.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/auth.dart';
 import 'package:doc_connect/services/fcm.dart';
 import 'package:doc_connect/services/forums.dart';
+import 'package:doc_connect/services/local_db.dart';
+import 'package:doc_connect/services/tip.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
@@ -44,6 +45,11 @@ class SplashScreenViewModel extends ChangeNotifier {
               .parseUserDocPatientsData(decodedJson);
           Provider.of<ForumsService>(_context, listen: false)
               .parseForumQuestions(decodedJson);
+          Provider.of<TipService>(_context, listen: false)
+              .parseTips(decodedJson);
+
+          LocalDB()..init();
+
           _navigateToTabsScreen();
           return;
         } else {

@@ -2,6 +2,7 @@ import 'package:doc_connect/api/urls.dart';
 import 'package:doc_connect/data_models/chat.dart';
 import 'package:doc_connect/data_models/user.dart';
 import 'package:doc_connect/services/chat.dart';
+import 'package:doc_connect/data_models/message.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   final TextEditingController textEditingController = TextEditingController();
   BuildContext _context;
   Chat _chat = Chat();
-  bool _receivedOldMessages = false;
+  bool _receivedOldMessages = true;
   Socket _chatSocket;
   final FocusNode messageFieldFocusNode = FocusNode();
   bool _firstMessage = true;
@@ -24,6 +25,8 @@ class ChatScreenViewModel extends ChangeNotifier {
     _chat = chat;
     _firstMessage = true;
     _initSockets(chat);
+    final m = Provider.of<ChatService>(_context, listen: false).messages;
+    print("Map $m");
   }
 
   _initSockets(Chat chat) async {
@@ -52,12 +55,12 @@ class ChatScreenViewModel extends ChangeNotifier {
           Future.delayed(Duration(milliseconds: 100)).whenComplete(() {
             scrollController
                 .animateTo(scrollController.position.maxScrollExtent,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOutCirc)
+                duration: Duration(milliseconds: 10),
+                curve: Curves.easeInOutCirc)
                 .whenComplete(() => scrollController.animateTo(
-                    scrollController.position.maxScrollExtent,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOutCirc));
+                scrollController.position.maxScrollExtent,
+                duration: Duration(milliseconds: 10),
+                curve: Curves.easeInOutCirc));
           });
         } catch (err) {}
       }
@@ -111,6 +114,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         roomId: _chat.id,
         message: textEditingController.text.trim(),
         authorId: user.id,
+        time: DateTime.now(),
       );
       var messageJson = Message.toJSON(message);
       message.time = DateTime.now();
@@ -130,7 +134,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
       try {
         Future.delayed(Duration(milliseconds: 100)).whenComplete(() {
-          scrollController.animateTo(scrollController.position.maxScrollExtent,
+          scrollController.animateTo(scrollController.position.minScrollExtent,
               duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         });
       } catch (err) {
@@ -149,9 +153,12 @@ class ChatScreenViewModel extends ChangeNotifier {
       ? User()
       : Provider.of<UsersService>(_context, listen: false).user;
 
-  List<Message> get messages => _context == null
-      ? List<Message>()
-      : Provider.of<ChatService>(_context).messages[_chat.id] ??
+  List<Message> get messages =>
+      _context == null
+          ? List<Message>()
+          : Provider
+          .of<ChatService>(_context)
+          .messages[_chat.id]?.reversed?.toList() ??
           List<Message>();
 
   bool get receivedOldMessages => _receivedOldMessages;

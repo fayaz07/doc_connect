@@ -3,15 +3,21 @@ import 'package:chopper/chopper.dart';
 import 'package:doc_connect/data_models/user.dart';
 import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/auth.dart';
+import 'package:doc_connect/services/chat.dart';
+import 'package:doc_connect/services/forums.dart';
+import 'package:doc_connect/services/local_db.dart';
+import 'package:doc_connect/services/tip.dart';
 import 'package:doc_connect/services/users.dart';
 import 'package:doc_connect/utils/navigation.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:doc_connect/views/home/home.dart';
 import 'package:doc_connect/views/profile/setup_profile_details.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 import 'package:location/location.dart';
 import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class ProfileViewModel extends ChangeNotifier {
   final Location _location = Location();
@@ -46,14 +52,20 @@ class ProfileViewModel extends ChangeNotifier {
     if (response.isSuccessful) {
       /// fetch nearby doctors and patients
       /// todo: to be changed to fetch separate data
-      final Response response = await APIService.api.getDashboard();
-      if (response.isSuccessful) {
-        final decodedJson = json.decode(response.body);
+
+      final Response dashboardResponse = await APIService.api.getDashboard();
+      if (dashboardResponse.isSuccessful) {
+        final decodedJson = json.decode(dashboardResponse.body);
         Provider.of<UsersService>(_context, listen: false)
             .parseUserDocPatientsData(decodedJson);
+        Provider.of<ForumsService>(_context, listen: false)
+            .parseForumQuestions(decodedJson);
+        Provider.of<TipService>(_context, listen: false).parseTips(decodedJson);
+
+        LocalDB()..init();
         return;
       } else {
-        AppToast.showError(response);
+        AppToast.showError(dashboardResponse);
       }
       _navigateToHomeScreen();
     } else {
