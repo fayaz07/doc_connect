@@ -65,7 +65,7 @@ class NewMedicalReportViewModel extends ChangeNotifier {
       case 6:
         _goToNextPage();
         break;
-    // surgeries
+      // surgeries
       case 7:
         _goToNextPage();
         break;
@@ -85,27 +85,24 @@ class NewMedicalReportViewModel extends ChangeNotifier {
     final response = await APIService.api
         .saveReport(jsonEncode(MedicalReport.toJSON(report)));
     if (response.isSuccessful) {
-      Provider
-          .of<UsersService>(_context, listen: false)
-          .user
-          .preMedicalReportId =
-      json.decode(response.body)["medicalReport"]["_id"];
+      Provider.of<UsersService>(_context, listen: false)
+              .user
+              .preMedicalReportId =
+          json.decode(response.body)["medicalReport"]["_id"];
 
       // update and save if appointment id is not null
       if (!_appointmentId.isNull()) {
         final patchAppointment =
-        await APIService.api.updateAppointment(jsonEncode({
+            await APIService.api.updateAppointment(jsonEncode({
           "appointment_id": _appointmentId,
           "pre_medical_report": json.decode(response.body)["medicalReport"]
-          ["_id"],
+              ["_id"],
         }));
         if (patchAppointment.isSuccessful) {
-          var a = Provider
-              .of<AppointmentService>(_context, listen: false)
-              .appointments
-              .firstWhere((element) => element.id.contains(_appointmentId));
+          var a = Provider.of<AppointmentService>(_context, listen: false)
+              .appointments[_appointmentId];
           a.preMedicalReport =
-          json.decode(response.body)["medicalReport"]["_id"];
+              json.decode(response.body)["medicalReport"]["_id"];
           Provider.of<AppointmentService>(_context, listen: false)
               .updateAppointment(a);
           AppToast.show(text: "Medical report submitted successfully");

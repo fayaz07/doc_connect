@@ -42,7 +42,7 @@ dependencies:
   flutter_facebook_login: ^3.0.0
   google_sign_in: ^4.5.1
   stacked: ^1.6.0
-  chopper: ^3.0.3
+  #chopper: ^3.0.3
   flutter_secure_storage: ^3.3.3
   flutter_platform_widgets: ^0.51.0
   json_serializable: ^3.3.0
@@ -58,6 +58,11 @@ dependencies:
   hive_flutter: ^0.3.1
   path_provider: ^1.6.11
   ots: ^0.0.1
+
+  chopper:
+    git:
+      url: git://github.com/fayaz07/chopper.git
+      path: chopper/
 
 
 dev_dependencies:

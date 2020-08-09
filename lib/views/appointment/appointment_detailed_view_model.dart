@@ -31,9 +31,7 @@ class AppointmentDetailedViewModel extends ChangeNotifier {
 
   Appointment get appointment => _context == null || _appointmentId.isNull()
       ? Appointment()
-      : Provider.of<AppointmentService>(_context)
-          .appointments
-          .firstWhere((element) => element.id.contains(_appointmentId));
+      : Provider.of<AppointmentService>(_context).appointments[_appointmentId];
 
   User get currentUser => _context == null
       ? User()
@@ -150,9 +148,9 @@ class AppointmentDetailedViewModel extends ChangeNotifier {
   }
 
   Appointment _getAppointment() {
-    return Provider.of<AppointmentService>(_context, listen: false)
-        .appointments
-        .firstWhere((element) => element.id.contains(_appointmentId));
+    return Provider
+        .of<AppointmentService>(_context, listen: false)
+        .appointments[_appointmentId];
   }
 
   void _updateAppointment(Appointment aa) {
@@ -228,9 +226,9 @@ class AppointmentDetailedViewModel extends ChangeNotifier {
         "pre_medical_report": currentUser.preMedicalReportId,
       }));
       if (patchAppointment.isSuccessful) {
-        var a = Provider.of<AppointmentService>(_context, listen: false)
-            .appointments
-            .firstWhere((element) => element.id.contains(_appointmentId));
+        var a = Provider
+            .of<AppointmentService>(_context, listen: false)
+            .appointments[_appointmentId];
         a.preMedicalReport = currentUser.preMedicalReportId;
         Provider.of<AppointmentService>(_context, listen: false)
             .updateAppointment(a);

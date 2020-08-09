@@ -43,7 +43,8 @@ class LoginSignUpViewModel extends ChangeNotifier {
     hideLoader();
     if (response.isSuccessful) {
 //      LocalDB()..init();
-
+      await AuthService.storeTimestamp(
+          DateTime.now().subtract(Duration(seconds: 10)));
       final decodedJson = json.decode(response.body);
       final user = User.fromJSON(decodedJson["user"]);
 
@@ -52,7 +53,7 @@ class LoginSignUpViewModel extends ChangeNotifier {
 
       Provider.of<TipService>(_context, listen: false).parseTips(decodedJson);
 
-      AllForumViewModel()..fetchForums(_context);
+//      AllForumViewModel()..fetchForums(_context);
       _updateFCMId();
 
       if (user.firstName == null ||

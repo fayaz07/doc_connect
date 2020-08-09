@@ -1,12 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:doc_connect/api/urls.dart';
-import 'package:doc_connect/services/api.dart';
 import 'package:doc_connect/services/auth.dart';
 import 'package:doc_connect/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 part 'api.chopper.dart';
+
+final _kClient = http.Client();
+
+Request lastRequest;
 
 @ChopperApi()
 abstract class DocConnectAPI extends ChopperService {
@@ -30,8 +35,8 @@ abstract class DocConnectAPI extends ChopperService {
   Future<Response<dynamic>> updateFCMId(@body dynamic body);
 
   /// dashboard api
-  @Get(path: Urls.dashboard)
-  Future<Response<dynamic>> getDashboard();
+  @Get(path: Urls.dashboard + "/{timestamp}")
+  Future<Response<dynamic>> getDashboard(@Path() String timestamp);
 
   /// user apis
   @Patch(path: Urls.user)
@@ -121,7 +126,7 @@ abstract class DocConnectAPI extends ChopperService {
       interceptors: [
         HttpLoggingInterceptor(),
         HeadersInterceptor(),
-//        TokenInterceptor(),
+        TokenInterceptor(),
       ],
     );
     return _$DocConnectAPI(client);
@@ -140,33 +145,53 @@ class HeadersInterceptor extends RequestInterceptor {
       headers.addAll({Constants.authToken: AuthService.authData.authToken});
     }
 
-    // todo: to be removed after, auth-token refreshing interceptor is added
-    if (request.url.contains("dashboard") || request.url.contains("token")) {
-      headers
-          .addAll({Constants.refreshToken: AuthService.authData.refreshToken});
-    } else {
-      APIService.currentRequest = request;
+    if (!request.url.contains("/token")) {
+      lastRequest = request.copyWith(headers: headers);
     }
+
     return request.copyWith(headers: headers);
   }
 }
 
-bool retry = false;
-
 class TokenInterceptor extends ResponseInterceptor {
+  Future<void> dudeRefreshMyToken() async {
+    final response = await http.post(Urls.baseURL + Urls.token, headers: {
+      "Content-Type": "application/json",
+      Constants.authToken: AuthService.authData.authToken,
+      Constants.refreshToken: AuthService.authData.refreshToken
+    });
+    if (response.statusCode == 200) {
+      print(response.headers);
+      await AuthService.storeTokens(response.headers[Constants.authToken],
+          response.headers[Constants.refreshToken]);
+    } else {
+      debugPrint(
+          "Failed to fetch token. I believed that works and didn't catch, I might catch this in future");
+    }
+  }
+
   @override
   FutureOr<Response> onResponse(Response response) async {
-    if (response.statusCode == 401 && !retry) {
-      final res = await response.base.request.send();
+    if (response.statusCode == 401 && response.error != null) {
+      final parsedError = json.decode(response.error);
 
-      print(res.statusCode);
-      retry = true;
-      final refreshResponse = await APIService.api.refreshToken();
-      retry = false;
-      if (refreshResponse.isSuccessful) {
-        await AuthService.parseAndStoreHeaders(refreshResponse);
-      } else {
-        return refreshResponse;
+      if (parsedError["message"] != null &&
+          parsedError.toString().toLowerCase().contains("expired")) {
+        debugPrint('token expired, refreshing the token and resending request');
+
+        await dudeRefreshMyToken();
+
+        lastRequest = lastRequest.copyWith(headers: {
+          "Content-Type": "application/json",
+          Constants.authToken: AuthService.authData.authToken
+        });
+
+        final request = await lastRequest.toBaseRequest();
+
+        final stream = await _kClient.send(request);
+        final res = await http.Response.fromStream(stream);
+
+        return Response(res, res.body);
       }
     }
     return response;

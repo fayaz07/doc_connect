@@ -14,8 +14,8 @@ class AppointmentsViewModel extends ChangeNotifier {
     _context = context;
   }
 
-  List<Appointment> get appointments => _context == null
-      ? <Appointment>[]
+  Map<String, Appointment> get appointments => _context == null
+      ? Map<String, Appointment>()
       : Provider.of<AppointmentService>(_context).appointments;
 
   User get user => _context == null

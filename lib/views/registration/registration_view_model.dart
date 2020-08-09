@@ -65,10 +65,10 @@ class RegistrationViewModel extends ChangeNotifier {
     hideLoader();
     if (oAuthResponse.success) {
       _updateFCMId();
+      await AuthService.storeTimestamp(
+          DateTime.now().subtract(Duration(seconds: 10)));
       // todo: fetch nearby doctors/patients
-      Provider
-          .of<UsersService>(_context, listen: false)
-          .user =
+      Provider.of<UsersService>(_context, listen: false).user =
           oAuthResponse.user;
       AuthService.parseHeadersAndStoreAuthData(
           response, oAuthResponse.user.isDoctor);

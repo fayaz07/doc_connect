@@ -13,6 +13,7 @@ class Constants {
   static const medicalReportsBox = "medicalReports-hive";
   static const forumsQuestionsBox = "forums-hive";
   static const forumsAnswersBox = "forum-answers-hive";
+  static const appointmentsBox = "appointments-hive";
 
   static const double fourBy1 = 4.0;
   static const double fourBy2 = 8.0;

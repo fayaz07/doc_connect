@@ -69,10 +69,16 @@ class UsersService with ChangeNotifier {
     if (LocalDB.userBox.length > 0) _user = LocalDB.userBox.getAt(0);
 
     /// fetch patients
-    if (LocalDB.patientsBox.length > 0) _patients = LocalDB.patientsBox.toMap();
+    if (LocalDB.patientsBox.length > 0)
+      for (var value in LocalDB.patientsBox.keys) {
+        _patients[value] = LocalDB.patientsBox.get(value, defaultValue: User());
+      }
 
     /// fetch doctors
-    if (LocalDB.doctorsBox.length > 0) _doctors = LocalDB.doctorsBox.toMap();
+    if (LocalDB.doctorsBox.length > 0)
+      for (var value in LocalDB.doctorsBox.keys) {
+        _doctors[value] = LocalDB.doctorsBox.get(value, defaultValue: User());
+      }
 
     notifyListeners();
   }

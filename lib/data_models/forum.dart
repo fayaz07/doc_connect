@@ -77,8 +77,8 @@ class ForumQuestion {
       authorId: map['authorId'],
       author: map["author"] != null
           ? map["author"][0] != null
-          ? Author.fromJSON(map["author"][0])
-          : Author()
+              ? Author.fromJSON(map["author"][0])
+              : Author()
           : Author(),
       topic: map['topic'],
       title: map['title'],

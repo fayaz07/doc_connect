@@ -31,6 +31,7 @@ class UserReview {
 
   static List<UserReview> fromJSONList(var jsonList) {
     List<UserReview> reviews = [];
+    if (jsonList == null) return reviews;
     for (var a in jsonList) {
       reviews.add(UserReview.fromJSON(a));
     }

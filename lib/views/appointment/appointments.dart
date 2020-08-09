@@ -35,8 +35,8 @@ class AppointmentsScreen extends StatelessWidget {
                       : ListView.builder(
                           padding: const EdgeInsets.all(8.0),
                           itemCount: model.appointments.length,
-                          itemBuilder: (context, i) =>
-                              _appointmentWidget(model.appointments[i], model),
+                          itemBuilder: (context, i) => _appointmentWidget(
+                              model.appointments.values.toList()[i], model),
                         ),
         ),
       ),

@@ -1,12 +1,13 @@
 import 'package:doc_connect/data_models/appointment.dart';
 import 'package:doc_connect/services/api.dart';
+import 'package:doc_connect/services/local_db.dart';
 import 'package:doc_connect/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:dartx/dartx.dart';
+//import 'package:dartx/dartx.dart';
 
 class AppointmentService with ChangeNotifier {
-  List<Appointment> _appointments = [];
+  Map<String, Appointment> _appointments = Map();
   bool _loading = true;
   bool _hasError = false;
 
@@ -15,14 +16,17 @@ class AppointmentService with ChangeNotifier {
   }
 
   void addAppointment(Appointment appointment) {
-    _appointments.add(appointment);
-    _appointments = _appointments.distinctBy((e) => e.id).toList();
+    _appointments[appointment.id] = appointment;
+    _addAppointmentToLocalDB(appointment);
+//    _appointments = _appointments.distinctBy((e) => e.id).toList();
     notifyListeners();
   }
 
   void updateAppointment(Appointment appointment) {
-    _appointments.removeWhere((element) => element.id == appointment.id);
-    _appointments.add(appointment);
+//    _appointments.removeWhere((element) => element.id == appointment.id);
+//    _appointments.add(appointment);
+    _appointments[appointment.id] = appointment;
+    _addAppointmentToLocalDB(appointment);
     notifyListeners();
   }
 
@@ -34,7 +38,8 @@ class AppointmentService with ChangeNotifier {
         final parsed =
             await compute(Appointment.parseList, response.body.toString());
         _appointments.addAll(parsed);
-        _appointments = _appointments.distinctBy((e) => e.id).toList();
+        _addAllAppointmentsToLocalDB(parsed);
+//        _appointments = _appointments.distinctBy((e) => e.id).toList();
       } else {
         _hasError = true;
         AppToast.showError(response);
@@ -44,9 +49,28 @@ class AppointmentService with ChangeNotifier {
     }
   }
 
-  List<Appointment> get appointments => _appointments;
+  Future<void> _addAppointmentToLocalDB(Appointment appointment) async {
+    await LocalDB.appointmentsBox.put(appointment.id, appointment);
+  }
 
-  set appointments(List<Appointment> value) {
+  Future<void> _addAllAppointmentsToLocalDB(
+      Map<String, Appointment> appointments) async {
+    await LocalDB.appointmentsBox.putAll(appointments);
+  }
+
+  void pullFromLocalDB() {
+    if (LocalDB.appointmentsBox.length > 0) {
+      LocalDB.appointmentsBox.keys.forEach((key) {
+        _appointments[key] =
+            LocalDB.appointmentsBox.get(key, defaultValue: Appointment());
+      });
+    }
+  }
+
+  ///----------------------- Getters and setters -------------------------------
+  Map<String, Appointment> get appointments => _appointments;
+
+  set appointments(Map<String, Appointment> value) {
     _appointments = value;
     notifyListeners();
   }

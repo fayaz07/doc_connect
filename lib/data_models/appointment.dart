@@ -61,12 +61,12 @@ class Appointment {
       this.offerAccepted = false,
       this.offerRejected = false,
       this.scheduledDate,
-    this.problemDescription,
-    this.problem,
-    this.preMedicalReport,
-    this.endUser,
-    this.cancelledByDoctor = false,
-    this.cancelledByPatient = false});
+      this.problemDescription,
+      this.problem,
+      this.preMedicalReport,
+      this.endUser,
+      this.cancelledByDoctor = false,
+      this.cancelledByPatient = false});
 
   static Appointment fromJSON(var map) {
     return Appointment(
@@ -90,11 +90,12 @@ class Appointment {
         cancelledByPatient: map["patient_cancelled"] ?? false);
   }
 
-  static List<Appointment> parseList(String jsonResponse) {
+  static Map<String, Appointment> parseList(String jsonResponse) {
     final jsonList = json.decode(jsonResponse)["appointments"];
-    List<Appointment> list = [];
+    Map<String, Appointment> list = Map();
     for (var c in jsonList) {
-      list.add(Appointment.fromJSON(c));
+      final dd = Appointment.fromJSON(c);
+      list[dd.id] = dd;
     }
     return list;
   }

@@ -39,14 +39,23 @@ class AuthService {
     await _storeAuthData(authData);
   }
 
-  static Future<void> parseAndStoreHeaders(
-      Response response) async {
+  static Future<void> parseAndStoreHeaders(Response response) async {
     authData.authToken = response.headers[Constants.authToken];
     authData.refreshToken = response.headers[Constants.refreshToken];
     await _secureStorage.write(
         key: Constants.authToken, value: authData.authToken);
     await _secureStorage.write(
         key: Constants.refreshToken, value: authData.refreshToken);
+  }
+
+  static Future<void> storeTokens(String authToken, String refreshToken) async {
+    authData.authToken = authToken;
+    authData.refreshToken = refreshToken;
+    await _secureStorage.write(
+        key: Constants.authToken, value: authData.authToken);
+    await _secureStorage.write(
+        key: Constants.refreshToken, value: authData.refreshToken);
+    print("stroed");
   }
 
   static Future<void> storeUserType(bool isDoctor) async {
@@ -83,6 +92,20 @@ class AuthService {
       debugPrint("Issue fetching auth data in AuthService");
       throw err;
     }
+  }
+
+  static final timestampKey = "timestamp";
+
+  static Future<void> storeTimestamp(DateTime dateTime) async {
+    await _secureStorage.write(
+        key: timestampKey, value: dateTime.toIso8601String());
+  }
+
+  static Future<DateTime> getTimestamp() async {
+    final dateTimeString = await _secureStorage.read(key: timestampKey);
+    if (dateTimeString == null) return null;
+    final dateTime = DateTime.parse(dateTimeString);
+    return dateTime;
   }
 
   static Future<void> logout() async {

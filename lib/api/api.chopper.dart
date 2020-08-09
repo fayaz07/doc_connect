@@ -64,8 +64,8 @@ class _$DocConnectAPI extends DocConnectAPI {
   }
 
   @override
-  Future<Response<dynamic>> getDashboard() {
-    final $url = 'dashboard';
+  Future<Response<dynamic>> getDashboard(String timestamp) {
+    final $url = 'dashboard/$timestamp';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -255,3 +255,4 @@ class _$DocConnectAPI extends DocConnectAPI {
     return client.send<dynamic, dynamic>($request);
   }
 }
+

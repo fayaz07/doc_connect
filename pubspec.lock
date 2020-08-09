@@ -137,9 +137,11 @@ packages:
   chopper:
     dependency: "direct main"
     description:
-      name: chopper
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "chopper/"
+      ref: HEAD
+      resolved-ref: "82272162a69b10ae3cba4d873e3b03b78154c4dc"
+      url: "git://github.com/fayaz07/chopper.git"
+    source: git
     version: "3.0.3"
   cli_util:
     dependency: transitive

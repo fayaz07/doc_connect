@@ -15,20 +15,30 @@ class APIService {
   static Request currentRequest;
 
   Future<void> getDashboard(BuildContext context) async {
-    final Response response = await APIService.api.getDashboard();
-    if (response.isSuccessful) {
-      AuthService.parseAndStoreHeaders(response);
-      final decodedJson = json.decode(response.body);
-      Provider.of<UsersService>(context, listen: false)
-          .parseUserDocPatients(decodedJson);
-      Provider.of<ForumsService>(context, listen: false)
-          .parseForumQuestions(decodedJson);
-      Provider.of<TipService>(context, listen: false).parseTips(decodedJson);
-
+    try {
+      final lastTimestamp = await AuthService.getTimestamp();
+      print(lastTimestamp ?? "null bro");
+      final Response response = await APIService.api
+          .getDashboard(lastTimestamp?.toIso8601String() ?? "");
+      if (response.isSuccessful) {
+        //AuthService.parseAndStoreHeaders(response);
+        final decodedJson = json.decode(response.body);
+        Provider.of<UsersService>(context, listen: false)
+            .parseUserDocPatients(decodedJson);
+        Provider.of<ForumsService>(context, listen: false)
+            .parseForumQuestions(decodedJson);
+        Provider.of<TipService>(context, listen: false).parseTips(decodedJson);
+        AuthService.storeTimestamp(
+            DateTime.now().subtract(Duration(seconds: 20)));
 //      LocalDB()..init();
-      return;
-    } else {
-      AppToast.showError(response);
+        return;
+      } else {
+        debugPrint(response.body);
+        AppToast.showError(response);
+      }
+    } catch (err) {
+      print(err);
+      throw err;
     }
     return;
   }
